@@ -678,14 +678,14 @@ function cajaGrupo(g, esMio) {
   return h('div', { class: 'caja' + (esMio ? ' mia' : '') },
     h('div', { class: 'caja-cab' }, h('h3', { text: 'Grupo ' + g.numero }), esMio ? h('span', { class: 'etiqueta', text: 'Tu grupo' }) : null, h('span', { class: 'der' }, catChip(g.cat))),
     h('div', { class: 'caja-cuerpo' }, tabla,
-      h('p', { class: 'nota', style: 'margin:8px 0 0' }, 'Ptos: lo que se llevaría cada uno si la jornada acabara hoy.'),
+      h('p', { class: 'nota', style: 'margin:8px 0 0' }, 'Ptos: lo que se llevaría cada uno si la jornada acabara hoy. En cada partido, el primero es el local y pone las bolas.'),
       otros.length ? h('div', { class: 'sub', text: esMio ? 'Resto de partidos' : 'Partidos' }) : null,
       otros.map(function (p) { return filaPartido(p, {}); })));
 }
 
 function filaPartido(p, op) {
   var d = S.d, yo = d.yo ? d.yo.id : null;
-  var titulo = op.mio ? 'Contra ' + nick(p.a === yo ? p.b : p.a) : nick(p.a) + ' – ' + nick(p.b);
+  var titulo = op.mio ? 'Contra ' + nick(p.a === yo ? p.b : p.a) + (p.tipo === 'Grupo' ? (p.a === yo ? ' · local (pones bolas)' : ' · visitante') : '') : nick(p.a) + ' – ' + nick(p.b);
   var res = p.texto ? h('div', { class: 'res' }, (p.texto === 'W.O.' ? 'No jugado' : p.texto) + ' · gana ', h('b', { text: nick(p.ganador === 'A' ? p.a : p.b) }))
                     : h('div', { class: 'res' }, h('span', { class: 'pend', text: 'Pendiente' }));
   var botones = [];
