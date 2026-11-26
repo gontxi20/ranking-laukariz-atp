@@ -124,10 +124,26 @@
 
   /* ---------- categorías ---------- */
   .cat { display: inline-flex; align-items: center; font-family: var(--num); font-weight: 700; font-size: 14px; line-height: 1; padding: 4px 8px 3px; border-radius: 6px; white-space: nowrap; }
-  .cat-1000 { background: var(--pista); color: var(--bola); }
-  .cat-500 { background: var(--pista-2); color: var(--tiza); }
-  .cat-250 { background: #9cabe3; color: var(--pista); }
-  .cat-100 { background: var(--linea); color: var(--tinta); }
+  .cat-1000 { background: #c9a227; color: #2b2100; }
+  .cat-500 { background: #2f6fe0; color: #fff; }
+  .cat-250 { background: #7a4fc0; color: #fff; }
+  .cat-100 { background: #d7dbe4; color: var(--tinta); }
+  /* grupos: un color por nivel */
+  .pila > .caja { margin-bottom: 14px; }
+  .grupo { --n1: #8a94a6; --n2: #eceef3; --n3: var(--tinta); }
+  .nivel-1000 { --n1: #c9a227; --n2: #fbf1cf; --n3: #6b5200; }
+  .nivel-500 { --n1: #2f6fe0; --n2: #e3ecff; --n3: #163f8f; }
+  .nivel-250 { --n1: #7a4fc0; --n2: #efe8fb; --n3: #4a2a80; }
+  .nivel-100 { --n1: #8a94a6; --n2: #eceef3; --n3: #39404f; }
+  .grupo > .caja-cab { background: var(--n2); border-top: 5px solid var(--n1); }
+  .grupo > .caja-cab h3 { color: var(--n3); font-size: 17px; }
+  .codigo { font-family: var(--num); font-weight: 700; font-size: 20px; line-height: 1; min-width: 38px; text-align: center; padding: 5px 7px 4px; border-radius: 8px; background: var(--n1); color: #fff; }
+  .nivel-1000 .codigo { color: #2b2100; }
+  .desplegable { margin-top: 12px; border-top: 1px solid var(--linea); }
+  .desplegable > summary { cursor: pointer; padding: 10px 0 4px; font-weight: 600; font-size: 14px; color: var(--pista-2); list-style: none; }
+  .desplegable > summary::-webkit-details-marker { display: none; }
+  .desplegable > summary::before { content: '▸'; display: inline-block; width: 16px; transition: transform .15s; }
+  .desplegable[open] > summary::before { transform: rotate(90deg); }
   .cat-gs { background: var(--bola); color: var(--pista); }
 
   /* ---------- ranking (lo memorable: marcador) ---------- */
@@ -401,6 +417,25 @@ function jugador(id) { return S.d && S.d.jugadores && S.d.jugadores.filter(funct
 function nick(id) { var j = jugador(id); return j ? (j.nick || j.nombre) : (id ? 'Exjugador' : '—'); }
 function soyYo(id) { return S.d && S.d.yo && S.d.yo.id === id; }
 function esProfe() { return !!(S.d && S.d.profesor); }
+/** Código y nombre de cada grupo (1 Mutua Madrid Open, 2A Trofeo Conde de Godó…), igual que en el motor. */
+function etiquetas(grupos) {
+  var R = (S.d && S.d.reglas) || {}, cats = (R.piramide || []).map(function (p) { return +p.cat; }), out = {};
+  grupos.forEach(function (g) { if (cats.indexOf(+g.cat) < 0) cats.push(+g.cat); });
+  cats.sort(function (a, b) { return b - a; });
+  cats.forEach(function (cat, nivel) {
+    var gs = grupos.filter(function (g) { return +g.cat === cat; }).sort(function (a, b) { return a.numero - b.numero; });
+    var nombres = (R.nombresGrupos || {})[cat] || [];
+    gs.forEach(function (g, i) { var c = (nivel + 1) + (gs.length > 1 ? String.fromCharCode(65 + i) : ''); out[g.numero] = { codigo: c, nombre: nombres[i] || 'Grupo ' + c }; });
+  });
+  return out;
+}
+function rotulo(numero) {
+  var J = S.d && S.d.jornada;
+  if (!J) return { codigo: String(numero), nombre: 'Grupo ' + numero };
+  if (S._rotJ !== J) { S._rotJ = J; S._rot = etiquetas(J.grupos); }
+  return S._rot[numero] || { codigo: String(numero), nombre: 'Grupo ' + numero };
+}
+function nombreGrupo(numero) { var r = rotulo(numero); return r.codigo + ' · ' + r.nombre; }
 
 /* ===================== servidor ===================== */
 function llamar(accion, args, ok, fallo) {
@@ -546,7 +581,7 @@ function vistaMenu(v) {
     var mio = yo ? J.grupos.filter(function (g) { return g.jugadores.indexOf(yo.id) >= 0; })[0] : null;
     if (mio) {
       var pend = mio.partidos.filter(function (p) { return (p.a === yo.id || p.b === yo.id) && !p.texto; }).length;
-      infoJ.push('Grupo ' + mio.numero + ' · ' + (pend ? 'te quedan ' + pend + ' partido' + (pend > 1 ? 's' : '') : 'has jugado todos tus partidos'));
+      infoJ.push(nombreGrupo(mio.numero) + ' · ' + (pend ? 'te quedan ' + pend + ' partido' + (pend > 1 ? 's' : '') : 'has jugado todos tus partidos'));
     } else infoJ.push(J.grupos.length + ' grupos en juego');
   } else infoJ.push('La temporada todavía no ha empezado');
 
@@ -600,7 +635,7 @@ function vistaRanking(v) {
       return h('li', { class: soyYo(r.id) ? 'yo' : null, onclick: function () { abrirFicha(r.id); }, tabindex: '0', onkeydown: function (e) { if (e.key === 'Enter') abrirFicha(r.id); } },
         h('span', { class: 'pos', text: String(r.pos) }),
         h('span', { class: 'mov ' + (mov > 0 ? 'sube' : mov < 0 ? 'baja' : ''), text: mov > 0 ? '▲' + mov : mov < 0 ? '▼' + (-mov) : '–', title: 'Respecto a hace un mes' }),
-        h('span', { class: 'nom' }, h('b', { text: j.nick }), h('small', { text: j.nick !== j.nombre ? j.nombre : (j.grupo ? 'Grupo ' + j.grupo : '') })),
+        h('span', { class: 'nom' }, h('b', { text: j.nick }), h('small', { text: j.nick !== j.nombre ? j.nombre : (j.grupo ? nombreGrupo(j.grupo) : '') })),
         h('span', null, catChip(j.cat)),
         h('span', { class: 'pts' }, miles(r.puntos), h('small', { text: 'puntos' })));
     })));
@@ -625,7 +660,7 @@ function abrirFicha(id) {
       h('div', null, h('b', { text: j.nick }), j.nick !== j.nombre ? h('span', { class: 'nota', text: j.nombre }) : null)),
     h('div', { class: 'datos-ficha' },
       h('div', null, h('b', { text: miles(r.puntos || 0) }), h('small', { text: 'puntos' })),
-      h('div', null, h('b', { text: j.grupo ? 'G' + j.grupo : '–' }), h('small', { text: j.cat ? 'Categoría ' + j.cat : 'Sin grupo' })),
+      h('div', null, h('b', { text: j.grupo ? rotulo(j.grupo).codigo : '–' }), h('small', { text: j.grupo ? rotulo(j.grupo).nombre : 'Sin grupo' })),
       h('div', null, h('b', { text: String(titulos.filter(function (t) { return t.campeon === id; }).length) }), h('small', { text: 'títulos' }))),
     j.telefono ? h('p', null, 'Teléfono: ', h('a', { href: 'tel:' + j.telefono.replace(/\s/g, ''), text: j.telefono })) : h('p', { class: 'nota', text: 'No ha puesto teléfono.' }),
     d.yo && !soyYo(id) ? h('div', { class: 'fila-botones', style: 'margin-bottom:10px' }, h('button', { class: 'boton bola peq', text: 'Retar a ' + j.nick, onclick: function () { confirmarReto(id); } })) : null,
@@ -658,7 +693,7 @@ function vistaJornada(v) {
     h('p', { text: 'Cada grupo es un torneo de su categoría: el 1º se lleva todos sus puntos y sube.' })));
   var mio = d.yo ? J.grupos.filter(function (g) { return g.jugadores.indexOf(d.yo.id) >= 0; })[0] : null;
   if (mio) poner(v, h('p', { style: 'margin:-6px 0 4px' }, h('a', { href: '#mi-grupo', class: 'boton bola peq', style: 'text-decoration:none;display:inline-block',
-    text: 'Ir a mi grupo (Grupo ' + mio.numero + ')', onclick: function (e) { e.preventDefault(); var x = document.getElementById('mi-grupo'); if (x) x.scrollIntoView({ behavior: 'smooth', block: 'start' }); } })));
+    text: 'Ir a mi grupo (' + nombreGrupo(mio.numero) + ')', onclick: function (e) { e.preventDefault(); var x = document.getElementById('mi-grupo'); if (x) x.scrollIntoView({ behavior: 'smooth', block: 'start' }); } })));
   else if (d.profesor) poner(v, h('p', { class: 'nota', text: 'Como profesores, los resultados se meten o corrigen en Admin › Resultados.' }));
   var cats = [];
   J.grupos.slice().sort(function (a, b) { return a.numero - b.numero; }).forEach(function (g) { if (cats.indexOf(g.cat) < 0) cats.push(g.cat); });
@@ -666,7 +701,7 @@ function vistaJornada(v) {
     var gs = J.grupos.filter(function (g) { return g.cat === cat; }).sort(function (a, b) { return a.numero - b.numero; });
     poner(v, h('div', { class: 'sub', style: 'display:flex;gap:8px;align-items:center;margin-top:18px' }, catChip(cat), 'Categoría ' + cat + ': el campeón suma ' + miles(d.reglas.puntosPuesto[cat] ? d.reglas.puntosPuesto[cat][0] : cat)));
     var tanda = [];
-    function soltar() { if (tanda.length) poner(v, h('div', { class: 'rejilla', style: 'margin-bottom:14px' }, tanda)); tanda = []; }
+    function soltar() { if (tanda.length) poner(v, h('div', { class: 'pila' }, tanda)); tanda = []; }
     gs.forEach(function (g) {
       if (g !== mio) return tanda.push(cajaGrupo(g, false));
       soltar();
@@ -693,15 +728,18 @@ function cajaGrupo(g, esMio) {
         h('td', { text: x.setsG + '-' + x.setsP }), h('td', { text: x.juegosG + '-' + x.juegosP }), h('td', { class: 'pts', text: miles(x.puntos) }));
     })));
   var otros = esMio && d.yo ? g.partidos.filter(function (p) { return p.a !== d.yo.id && p.b !== d.yo.id; }) : g.partidos;
-  return h('div', { class: 'caja' + (esMio ? ' mia' : '') },
-    h('div', { class: 'caja-cab' }, h('h3', { text: 'Grupo ' + g.numero }), esMio ? h('span', { class: 'etiqueta', text: 'Tu grupo' }) : null, h('span', { class: 'der' }, catChip(g.cat))),
+  var r = rotulo(g.numero), jugados = otros.filter(function (p) { return p.texto; }).length;
+  return h('div', { class: 'caja grupo nivel-' + g.cat + (esMio ? ' mia' : '') },
+    h('div', { class: 'caja-cab' }, h('span', { class: 'codigo', text: r.codigo }), h('h3', { text: r.nombre }),
+      esMio ? h('span', { class: 'etiqueta', text: 'Tu grupo' }) : null, h('span', { class: 'der' }, catChip(g.cat))),
     h('div', { class: 'caja-cuerpo' }, tabla,
       h('div', { class: 'leyenda' }, g.numero === 1 ? h('span', { class: 'l-oro', text: '👑 Líder' }) : h('span', { class: 'l-sube', text: 'Sube' }),
         g.tabla.some(function (x) { return x.mov === 'baja'; }) ? h('span', { class: 'l-baja', text: 'Baja' }) : null,
         h('span', { text: 'Si la jornada acabara hoy. Ptos: lo que se llevaría cada uno.' })),
       h('p', { class: 'nota', style: 'margin:6px 0 0' }, 'En cada partido, el primero es el local y pone las bolas.'),
-      otros.length ? h('div', { class: 'sub', text: esMio ? 'Resto de partidos' : 'Partidos' }) : null,
-      otros.map(function (p) { return filaPartido(p, {}); })));
+      otros.length ? h('details', { class: 'desplegable' },
+        h('summary', null, (esMio ? 'Resto de partidos' : 'Ver los partidos') + ' (' + jugados + ' de ' + otros.length + ' jugados)'),
+        otros.map(function (p) { return filaPartido(p, {}); })) : null));
 }
 
 function filaPartido(p, op) {
@@ -773,7 +811,7 @@ function pintarResultado() {
   var hoja = document.getElementById('hoja'), p = M.p;
   hoja.innerHTML = '';
   poner(hoja, [h('h3', { text: nick(p.a) + ' vs ' + nick(p.b) }),
-    h('p', { class: 'nota', text: (p.tipo === 'Reto' ? 'Reto' : p.tipo === 'Torneo' ? 'Partido de torneo' : 'Partido del grupo ' + p.grupo) + (M.admin ? ' · como profesor' : '') })]);
+    h('p', { class: 'nota', text: (p.tipo === 'Reto' ? 'Reto' : p.tipo === 'Torneo' ? 'Partido de torneo' : nombreGrupo(p.grupo)) + (M.admin ? ' · como profesor' : '') })]);
   poner(hoja, h('div', { class: 'seg' },
     h('button', { class: !M.noJugado ? 'activo' : null, text: 'Se jugó', onclick: function () { M.noJugado = false; pintarResultado(); } }),
     h('button', { class: M.noJugado ? 'activo' : null, text: 'No se jugó', onclick: function () { M.noJugado = true; pintarResultado(); } })));
@@ -1028,7 +1066,7 @@ function vistaHistorico(v) {
   var porJornada = {};
   jornadas.forEach(function (x) { var k = x.titulo.split(' · ')[0]; (porJornada[k] = porJornada[k] || []).push(x); });
   Object.keys(porJornada).forEach(function (k) {
-    var lista = porJornada[k].sort(function (a, b) { return +a.titulo.replace(/\D+/g, ' ').trim().split(' ').pop() - +b.titulo.replace(/\D+/g, ' ').trim().split(' ').pop(); });
+    var lista = porJornada[k].sort(function (a, b) { return String(a.titulo.split(' · ')[1]).localeCompare(String(b.titulo.split(' · ')[1]), 'es', { numeric: true }); });
     poner(v, h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h2', { text: k }), h('span', { class: 'nota der', text: 'Cerrada el ' + fecha(lista[0].fecha) })),
       h('div', { class: 'caja-cuerpo' }, lista.map(function (x) {
         return h('div', { class: 'titulo' }, catChip(x.cat), h('div', { class: 'info' }, x.titulo.split(' · ')[1] + ': ', h('b', { text: nick(x.campeon) }), h('small', { text: 'Subcampeón: ' + nick(x.subcampeon) })));
@@ -1136,7 +1174,7 @@ function profJornada(v) {
       cuerpo.push(h('table', null, h('thead', null, h('tr', null, ['#', 'Jugador', 'V', 'Sets', 'Puntos'].map(function (t) { return h('th', { text: t }); }))),
         h('tbody', null, c.tabla.map(function (x) { return h('tr', null, h('td', { text: String(x.puesto) }), h('td', { text: nick(x.id) }), h('td', { text: String(x.victorias) }), h('td', { text: x.setsG + '-' + x.setsP }), h('td', { class: 'pts', text: '+' + miles(x.puntos) })); }))));
     }
-    cuerpo.push(h('div', { class: 'sub', text: 'Grupo ' + g.numero + ' en la nueva jornada' }));
+    cuerpo.push(h('div', { class: 'sub', text: etiquetas(A.estado)[g.numero].codigo + ' en la nueva jornada' }));
     g.jugadores.forEach(function (j, idx) {
       var tipo = tipoChip(j);
       cuerpo.push(h('div', { class: 'jug' }, h('span', { class: 'ic ' + tipo, text: ICONOS[tipo] }),
@@ -1144,11 +1182,11 @@ function profJornada(v) {
         h('label', { class: 'nota', style: 'display:flex;gap:5px;align-items:center' }, 'Mover a', h('select', { class: 'mover', value: String(g.numero), onchange: function (e) {
           var dest = A.estado.filter(function (x) { return x.numero === +e.target.value; })[0], jug = g.jugadores.splice(idx, 1)[0];
           jug.manual = true; dest.jugadores.push(jug); delete A.revisados[g.numero]; delete A.revisados[dest.numero];
-          toast(nick(jug.id) + ' → grupo ' + dest.numero); pintar();
-        } }, A.estado.map(function (x) { return h('option', { value: String(x.numero), text: 'G' + x.numero + ' (' + x.cat + ')' }); })))));
+          toast(nick(jug.id) + ' → ' + etiquetas(A.estado)[dest.numero].codigo); pintar();
+        } }, A.estado.map(function (x) { var e = etiquetas(A.estado)[x.numero]; return h('option', { value: String(x.numero), text: e.codigo + ' ' + e.nombre }); })))));
     });
     rej.appendChild(h('div', { class: 'caja' + (rev ? ' revisar' : '') },
-      h('div', { class: 'caja-cab' }, h('h3', { text: 'Grupo ' + g.numero }), catChip(g.cat), h('span', { class: 'etiqueta ' + (rev ? 'ambar' : ''), text: rev ? 'Revisar' : 'Correcto' }),
+      h('div', { class: 'caja-cab' }, h('h3', { text: etiquetas(A.estado)[g.numero].codigo + ' · ' + etiquetas(A.estado)[g.numero].nombre }), catChip(g.cat), h('span', { class: 'etiqueta ' + (rev ? 'ambar' : ''), text: rev ? 'Revisar' : 'Correcto' }),
         rev ? h('button', { class: 'boton peq sec der', text: 'Revisado', onclick: function () { A.revisados[g.numero] = true; pintar(); } }) : null),
       h('div', { class: 'caja-cuerpo' }, cuerpo)));
   });
@@ -1161,7 +1199,7 @@ function profJornada(v) {
     h('div', { class: 'txt', text: pendientes ? pendientes + ' grupos sin revisar' : 'Listo para publicar' }),
     h('button', { class: 'boton prim', text: 'Publicar jornada', onclick: function () {
       var vacios = A.estado.filter(function (g) { return !g.jugadores.length; });
-      if (vacios.length) return toast('El grupo ' + vacios[0].numero + ' está vacío.');
+      if (vacios.length) return toast('El grupo ' + etiquetas(A.estado)[vacios[0].numero].codigo + ' está vacío.');
       confirmar('¿Publicar la nueva jornada?', (P.primera ? '' : 'Se reparten los puntos de la jornada ' + P.jornada.numero + ' y se apuntan los campeones. ') + 'Se crean ' + A.estado.length + ' grupos con sus partidos.' + (pendientes ? ' Ojo: quedan ' + pendientes + ' grupos sin revisar.' : ''), 'Publicar', false, function (finC) {
         llamar('adminPublicarJornada', [S.token, A.estado.map(function (g) { return { numero: g.numero, cat: g.cat, jugadores: g.jugadores.map(function (j) { return j.id; }) }; }), A.fechas],
           function (r) { refrescarAdmin('Jornada ' + r.numero + ' publicada: ' + r.grupos + ' grupos, ' + r.jugadores + ' jugadores'); }, finC);
@@ -1296,7 +1334,7 @@ function profJugadores(v) {
         pago.disabled = true; llamar('adminPagado', [S.token, j.id, !j.pagado], function () { j.pagado = !j.pagado; pintar(); });
       } });
       return h('div', { class: 'jug' }, h('div', { class: 'nom' }, j.nombre + (j.nick ? ' · ' + j.nick : ''),
-        h('small', null, j.usuario ? h('b', { text: 'Usuario: ' + j.usuario }) : null, ' ' + [j.grupo ? 'Grupo ' + j.grupo + ' (' + j.cat + ')' : '', j.telefono, j.cuenta ? 'cuenta activada' : 'aún con 12345'].filter(Boolean).join(' · '))),
+        h('small', null, j.usuario ? h('b', { text: 'Usuario: ' + j.usuario }) : null, ' ' + [j.grupo ? nombreGrupo(j.grupo) : '', j.telefono, j.cuenta ? 'cuenta activada' : 'aún con 12345'].filter(Boolean).join(' · '))),
         estado, pago, h('button', { class: 'boton peq texto', text: 'Editar', onclick: function () { abrirEditar(j); } }));
     })));
   }
@@ -1344,7 +1382,7 @@ function abrirEditar(j) {
     });
   } }));
   if (j.estado === 'Baja pendiente') extra.push(h('button', { class: 'boton peq sec', text: 'Anular la baja', onclick: function () { llamar('adminCancelarBaja', [S.token, j.id], function () { refrescarAdmin('Baja anulada'); }); } }));
-  poner(hoja, [h('h3', { text: j.nombre }), h('p', { class: 'nota', text: j.estado + (j.grupo ? ' · grupo ' + j.grupo : '') + (j.cuenta ? ' · cuenta activada' : ' · todavía con la contraseña 12345') }),
+  poner(hoja, [h('h3', { text: j.nombre }), h('p', { class: 'nota', text: j.estado + (j.grupo ? ' · ' + nombreGrupo(j.grupo) : '') + (j.cuenta ? ' · cuenta activada' : ' · todavía con la contraseña 12345') }),
     h('div', { class: 'campo' }, h('label', { text: 'Usuario para entrar' }), usu),
     h('div', { class: 'campo' }, h('label', { text: 'Nombre' }), nombre), h('div', { class: 'campo' }, h('label', { text: 'Nick' }), nk),
     h('div', { class: 'campo' }, h('label', { text: 'Teléfono' }), tel), h('div', { class: 'campo' }, h('label', { text: 'Correo' }), mail),
@@ -1359,7 +1397,7 @@ function profResultados(v) {
   poner(v, h('div', { class: 'fila-botones', style: 'margin-bottom:14px' }, h('button', { class: 'boton bola peq', text: 'Apuntar un reto ya jugado', onclick: abrirRetoProfesor })));
   var bloques = [];
   if (d.jornada) d.jornada.grupos.forEach(function (g) {
-    bloques.push(h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h3', { text: 'Grupo ' + g.numero }), h('span', { class: 'der' }, catChip(g.cat))),
+    bloques.push(h('div', { class: 'caja nivel-' + g.cat }, h('div', { class: 'caja-cab' }, h('h3', { text: nombreGrupo(g.numero) }), h('span', { class: 'der' }, catChip(g.cat))),
       h('div', { class: 'caja-cuerpo' }, g.partidos.map(function (p) { return filaPartido(p, { admin: true }); }))));
   });
   var retos = d.retos.filter(function (r) { return r.estado === 'jugado'; }).slice(0, 30);
