@@ -154,7 +154,18 @@
   th:nth-child(-n+2), td:nth-child(-n+2) { text-align: left; }
   td:first-child { color: var(--suave); width: 22px; }
   tr:last-child td { border-bottom: 0; }
-  tr.yo td { background: var(--bola-claro); font-weight: 600; }
+  tr.yo td { font-weight: 700; }
+  tr.yo td:nth-child(2)::after { content: ' (tú)'; font-weight: 500; color: var(--suave); }
+  tr.sube td { background: #e5f5ea; }
+  tr.sube td:first-child { box-shadow: inset 3px 0 0 #2e9e5b; color: #1f7a45; font-weight: 700; }
+  tr.baja td { background: #fdeceb; }
+  tr.baja td:first-child { box-shadow: inset 3px 0 0 #d0453a; color: #b3261e; font-weight: 700; }
+  tr.oro td { background: #fbf2d3; }
+  tr.oro td:first-child { box-shadow: inset 3px 0 0 #c9a227; }
+  tr.oro td:nth-child(2), tr.oro td.pts { color: #8a6a00; font-weight: 700; }
+  .leyenda { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin-top: 10px; font-size: 12.5px; color: var(--suave); }
+  .leyenda span[class] { padding: 2px 9px; border-radius: 999px; font-weight: 600; }
+  .l-sube { background: #e5f5ea; color: #1f7a45; } .l-baja { background: #fdeceb; color: #b3261e; } .l-oro { background: #fbf2d3; color: #8a6a00; }
   td.enlace { cursor: pointer; }
   td.pts { font-family: var(--num); font-weight: 700; font-size: 16px; }
   .partido { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #edf0f6; }
@@ -208,6 +219,7 @@
   .llave .lado { display: flex; justify-content: space-between; gap: 8px; padding: 6px 10px; }
   .llave .lado + .lado { border-top: 1px solid #edf0f6; }
   .llave .lado.gana { font-weight: 700; }
+  .llave .soy { font-weight: 800; color: var(--pista); background: var(--bola-claro); padding: 0 4px; border-radius: 4px; }
   .llave .lado.bye { color: #98a0b3; font-style: italic; }
   .llave .marcador-llave { font-family: var(--num); font-size: 13.5px; color: var(--suave); padding: 4px 10px 6px; border-top: 1px dashed #edf0f6; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
   .campeon { display: flex; gap: 14px; align-items: center; padding: 14px 16px; background: var(--pista); color: var(--tiza); }
@@ -645,22 +657,26 @@ function vistaJornada(v) {
       h('span', { class: 'etiqueta ' + (quedan < 0 ? 'rojo' : quedan <= 14 ? 'ambar' : ''), text: quedan >= 0 ? (quedan === 0 ? 'Último día' : 'Quedan ' + quedan + ' días') : 'Plazo terminado: a la espera del cierre' })),
     h('p', { text: 'Cada grupo es un torneo de su categoría: el 1º se lleva todos sus puntos y sube.' })));
   var mio = d.yo ? J.grupos.filter(function (g) { return g.jugadores.indexOf(d.yo.id) >= 0; })[0] : null;
-  if (mio) {
-    var misP = mio.partidos.filter(function (p) { return p.a === d.yo.id || p.b === d.yo.id; });
-    poner(v, h('div', { class: 'dos', style: 'margin-bottom:14px' },
-      h('div', { class: 'caja mia' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Tus partidos' }), h('span', { class: 'der' }, catChip(mio.cat))),
-        h('div', { class: 'caja-cuerpo' }, misP.map(function (p) { return filaPartido(p, { mio: true }); }))),
-      cajaGrupo(mio, true)));
-  } else if (d.profesor) {
-    poner(v, h('p', { class: 'nota', text: 'Como profesores, los resultados se meten o corrigen en Admin › Resultados.' }));
-  }
+  if (mio) poner(v, h('p', { style: 'margin:-6px 0 4px' }, h('a', { href: '#mi-grupo', class: 'boton bola peq', style: 'text-decoration:none;display:inline-block',
+    text: 'Ir a mi grupo (Grupo ' + mio.numero + ')', onclick: function (e) { e.preventDefault(); var x = document.getElementById('mi-grupo'); if (x) x.scrollIntoView({ behavior: 'smooth', block: 'start' }); } })));
+  else if (d.profesor) poner(v, h('p', { class: 'nota', text: 'Como profesores, los resultados se meten o corrigen en Admin › Resultados.' }));
   var cats = [];
-  J.grupos.forEach(function (g) { if (cats.indexOf(g.cat) < 0) cats.push(g.cat); });
+  J.grupos.slice().sort(function (a, b) { return a.numero - b.numero; }).forEach(function (g) { if (cats.indexOf(g.cat) < 0) cats.push(g.cat); });
   cats.forEach(function (cat) {
-    var gs = J.grupos.filter(function (g) { return g.cat === cat && g !== mio; });
-    if (!gs.length) return;
+    var gs = J.grupos.filter(function (g) { return g.cat === cat; }).sort(function (a, b) { return a.numero - b.numero; });
     poner(v, h('div', { class: 'sub', style: 'display:flex;gap:8px;align-items:center;margin-top:18px' }, catChip(cat), 'Categoría ' + cat + ': el campeón suma ' + miles(d.reglas.puntosPuesto[cat] ? d.reglas.puntosPuesto[cat][0] : cat)));
-    poner(v, h('div', { class: 'rejilla' }, gs.map(function (g) { return cajaGrupo(g, false); })));
+    var tanda = [];
+    function soltar() { if (tanda.length) poner(v, h('div', { class: 'rejilla', style: 'margin-bottom:14px' }, tanda)); tanda = []; }
+    gs.forEach(function (g) {
+      if (g !== mio) return tanda.push(cajaGrupo(g, false));
+      soltar();
+      var misP = mio.partidos.filter(function (p) { return p.a === d.yo.id || p.b === d.yo.id; });
+      poner(v, h('div', { class: 'dos', id: 'mi-grupo', style: 'margin-bottom:14px;scroll-margin-top:12px' },
+        h('div', { class: 'caja mia' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Tus partidos' }), h('span', { class: 'der' }, catChip(mio.cat))),
+          h('div', { class: 'caja-cuerpo' }, misP.map(function (p) { return filaPartido(p, { mio: true }); }))),
+        cajaGrupo(mio, true)));
+    });
+    soltar();
   });
 }
 
@@ -669,8 +685,10 @@ function cajaGrupo(g, esMio) {
   var tabla = h('table', null,
     h('thead', null, h('tr', null, ['#', 'Jugador', 'PJ', 'V', 'Sets', 'Juegos', 'Ptos'].map(function (c) { return h('th', { text: c }); }))),
     h('tbody', null, g.tabla.map(function (x) {
-      return h('tr', { class: soyYo(x.id) ? 'yo' : null },
-        h('td', { text: String(x.puesto) }), h('td', { class: 'enlace', text: nick(x.id), onclick: function () { abrirFicha(x.id); } }),
+      var oro = g.numero === 1 && x.puesto === 1;
+      var clase = [oro ? 'oro' : x.mov === 'sube' ? 'sube' : x.mov === 'baja' ? 'baja' : '', soyYo(x.id) ? 'yo' : ''].join(' ').trim() || null;
+      return h('tr', { class: clase, title: oro ? 'Líder del grupo 1' : x.mov === 'sube' ? 'Subiría de grupo' : x.mov === 'baja' ? 'Bajaría de grupo' : null },
+        h('td', { text: oro ? '👑' : String(x.puesto) }), h('td', { class: 'enlace', text: nick(x.id), onclick: function () { abrirFicha(x.id); } }),
         h('td', { text: String(x.jugados) }), h('td', { text: String(x.victorias) }),
         h('td', { text: x.setsG + '-' + x.setsP }), h('td', { text: x.juegosG + '-' + x.juegosP }), h('td', { class: 'pts', text: miles(x.puntos) }));
     })));
@@ -678,7 +696,10 @@ function cajaGrupo(g, esMio) {
   return h('div', { class: 'caja' + (esMio ? ' mia' : '') },
     h('div', { class: 'caja-cab' }, h('h3', { text: 'Grupo ' + g.numero }), esMio ? h('span', { class: 'etiqueta', text: 'Tu grupo' }) : null, h('span', { class: 'der' }, catChip(g.cat))),
     h('div', { class: 'caja-cuerpo' }, tabla,
-      h('p', { class: 'nota', style: 'margin:8px 0 0' }, 'Ptos: lo que se llevaría cada uno si la jornada acabara hoy. En cada partido, el primero es el local y pone las bolas.'),
+      h('div', { class: 'leyenda' }, g.numero === 1 ? h('span', { class: 'l-oro', text: '👑 Líder' }) : h('span', { class: 'l-sube', text: 'Sube' }),
+        g.tabla.some(function (x) { return x.mov === 'baja'; }) ? h('span', { class: 'l-baja', text: 'Baja' }) : null,
+        h('span', { text: 'Si la jornada acabara hoy. Ptos: lo que se llevaría cada uno.' })),
+      h('p', { class: 'nota', style: 'margin:6px 0 0' }, 'En cada partido, el primero es el local y pone las bolas.'),
       otros.length ? h('div', { class: 'sub', text: esMio ? 'Resto de partidos' : 'Partidos' }) : null,
       otros.map(function (p) { return filaPartido(p, {}); })));
 }
@@ -899,7 +920,7 @@ function cuadroTorneo(t, admin) {
       var bye = r === 1 && (!p.a || !p.b);
       function lado(id, letra) {
         return h('div', { class: 'lado' + (p.texto && p.ganador === letra ? ' gana' : '') + (!id && bye ? ' bye' : '') },
-          h('span', null, id && rk[id] ? h('span', { class: 'rk', text: String(rk[id]) }) : h('span', { class: 'rk' }), id ? nick(id) : (bye ? 'exento' : '—')),
+          h('span', null, id && rk[id] ? h('span', { class: 'rk', text: String(rk[id]) }) : h('span', { class: 'rk' }), id ? (id === yo ? h('b', { class: 'soy', text: nick(id) }) : nick(id)) : (bye ? 'exento' : '—')),
           p.texto && p.ganador === letra ? h('span', { text: '✓' }) : null);
       }
       var mio = yo && (p.a === yo || p.b === yo) && p.a && p.b;
