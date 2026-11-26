@@ -834,7 +834,7 @@ function porAnio(lista) {
 function vistaTorneos(v) {
   var d = S.d, P = d.reglas.puntosTorneo;
   poner(v, h('div', { class: 'intro' }, h('h1', { text: 'Torneos' }),
-    h('p', { text: 'Cuatro Grand Slam al año y el Máster, que juegan los 8 inscritos con mejor clasificación. Puntos: campeón ' + miles(P.W) + ', finalista ' + miles(P.F) +
+    h('p', { text: 'Cuatro Grand Slam al año y el Masters Laukariz Finals, que juegan los 8 inscritos con mejor clasificación. Puntos: campeón ' + miles(P.W) + ', finalista ' + miles(P.F) +
       ', semifinales ' + P.SF + ', cuartos ' + P.QF + ', octavos ' + P.R16 + '. Pulsa en un torneo para ver su cuadro.' })));
   if (!d.torneos.length) return poner(v, h('div', { class: 'caja' }, h('div', { class: 'vacio', text: 'Los profesores todavía no han programado la temporada de torneos.' })));
   var dest = torneoDestacado(d.torneos);
@@ -885,7 +885,7 @@ function detalleTorneo(t, admin) {
     poner(dentro, cuadroTorneo(t, admin));
   }
   return h('div', { class: 'caja', style: varsColor(t) },
-    h('div', { class: 'det-cab ' + cab }, logo(t, 'logo-det'), h('h2', { text: nombreT(t) }), h('small', { text: t.tipo === 'Máster' ? 'Máster · los 8 mejores inscritos' : 'Grand Slam' + (t.tam ? ' · cuadro de ' + t.tam : '') }),
+    h('div', { class: 'det-cab ' + cab }, logo(t, 'logo-det'), h('h2', { text: nombreT(t) }), h('small', { text: t.tipo === 'Máster' ? 'Finals · los 8 mejores inscritos' : 'Grand Slam' + (t.tam ? ' · cuadro de ' + t.tam : '') }),
       h('span', { class: 'etiqueta ' + etiqueta[1], text: etiqueta[0] })),
     dentro);
 }
@@ -995,7 +995,7 @@ function vistaHistorico(v) {
   var palmares = Object.keys(conteo).map(function (id) { return { id: id, t: conteo[id].torneos, g: conteo[id].grupos }; })
     .sort(function (a, b) { return b.t - a.t || b.g - a.g; }).slice(0, 15);
   var bloques = [];
-  if (torneos.length) bloques.push(h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Grand Slam y Máster' })), h('div', { class: 'caja-cuerpo' }, torneos.map(function (x) {
+  if (torneos.length) bloques.push(h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Grand Slam y Finals' })), h('div', { class: 'caja-cuerpo' }, torneos.map(function (x) {
     return h('div', { class: 'titulo' }, h('span', { class: 'copa', text: '🏆' }), h('div', { class: 'info' }, h('b', { text: x.titulo }),
       h('small', null, 'Campeón: ', h('a', { href: '#', text: nick(x.campeon), onclick: function (e) { e.preventDefault(); abrirFicha(x.campeon); } }),
         ' · subcampeón: ' + nick(x.subcampeon) + ' · ' + fecha(x.fecha))));
@@ -1155,7 +1155,7 @@ function profTorneos(v) {
   var anioHoy = +d.hoy.slice(0, 4), mesHoy = +d.hoy.slice(5, 7);
   var anioI = h('input', { type: 'number', min: '2025', max: '2100', style: 'max-width:110px', value: String(maxA ? maxA + 1 : (mesHoy >= 9 ? anioHoy + 1 : anioHoy)) });
   poner(v, h('div', { class: 'caja', style: 'max-width:620px' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Programar una temporada' })), h('div', { class: 'caja-cuerpo' },
-    h('p', { class: 'nota', style: 'margin-top:0', text: 'Crea en gris Australian Open, Roland-Garros, Wimbledon (verano), US Open y Máster. Los años anteriores se quedan debajo, siempre visibles.' }),
+    h('p', { class: 'nota', style: 'margin-top:0', text: 'Crea en gris Australian Open, Roland-Garros, Wimbledon (verano), US Open y Masters Laukariz Finals. Los años anteriores se quedan debajo, siempre visibles.' }),
     h('div', { class: 'fila-botones' }, h('label', { class: 'nota', style: 'display:flex;gap:6px;align-items:center' }, 'Año', anioI),
       h('button', { class: 'boton prim peq', text: 'Programar torneos', onclick: function (e) {
         e.target.disabled = true;
