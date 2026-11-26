@@ -1,0 +1,12 @@
+{
+  "name": "Ranking de tenis · Club de Campo Laukariz",
+  "short_name": "Ranking LKZ",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#00167a",
+  "theme_color": "#00167a",
+  "icons": [
+    { "src": "img/icono-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "img/icono-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
