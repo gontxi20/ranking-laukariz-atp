@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ranking de tenis · Laukariz</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎾%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#1f4d3a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pista: #1f4d3a;      /* verde del club */
+    --pista-2: #2c6650;
+    --pista-claro: #e3efe8;
+    --bola: #d9ec5b;       /* amarillo pelota: lo destacado */
+    --bola-claro: #f6fad8;
+    --tiza: #ffffff;
+    --tinta: #17211c;
+    --suave: #5b6a62;
+    --linea: #dbe3de;
+    --fondo: #f1f4f1;
+    --rojo: #b3261e; --rojo-claro: #fbe9e7;
+    --ambar: #8a5a00; --ambar-claro: #fff3d6;
+    --azul: #1d5fa8; --azul-claro: #e7f0fb;
+    --morado: #6b3fa0; --morado-claro: #f1eafa;
+    --oro: #b88a1b; --plata: #8a949b;
+    --num: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: var(--fondo); color: var(--tinta); font: 15.5px/1.5 Barlow, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--bola); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+  /* ---------- cabecera ---------- */
+  .cab { background: var(--pista); color: var(--tiza); padding: 14px 16px 0; position: relative; overflow: hidden; }
+  .cab::after { content: ''; position: absolute; right: -60px; top: -40px; width: 220px; height: 220px; border: 3px solid rgba(255,255,255,.08); border-radius: 50%; }
+  .cab-fila { display: flex; align-items: center; gap: 12px; max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+  .marca { flex: 1; min-width: 0; }
+  .marca b { display: block; font-family: var(--num); font-size: 24px; font-weight: 700; letter-spacing: .01em; line-height: 1.05; }
+  .marca small { color: #b5d2c3; font-size: 13px; }
+  .cuenta { border: 1px solid rgba(255,255,255,.35); background: rgba(255,255,255,.08); color: var(--tiza); border-radius: 999px; padding: 7px 14px; cursor: pointer; font-weight: 600; font-size: 14px; max-width: 48%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cuenta.dentro { background: var(--bola); color: var(--pista); border-color: var(--bola); }
+  .pestanas { display: flex; gap: 2px; max-width: 1100px; margin: 12px auto 0; overflow-x: auto; position: relative; z-index: 1; scrollbar-width: none; }
+  .pestanas::-webkit-scrollbar { display: none; }
+  .pestanas button { background: none; border: 0; color: #c3dccf; padding: 10px 12px 12px; cursor: pointer; font-weight: 600; border-bottom: 3px solid transparent; white-space: nowrap; }
+  .pestanas button.activa { color: var(--tiza); border-bottom-color: var(--bola); }
+  .pestanas .aviso { display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 4px; border-radius: 9px; background: var(--bola); color: var(--pista); font-size: 12px; line-height: 18px; text-align: center; }
+  main { max-width: 1100px; margin: 0 auto; padding: 16px 14px 100px; }
+
+  /* ---------- bloques ---------- */
+  h1 { font-family: var(--num); font-size: 32px; line-height: 1.05; margin: 4px 0 4px; font-weight: 700; }
+  h2 { font-size: 18px; margin: 0; }
+  h3 { font-size: 16px; margin: 0; }
+  .intro { margin: 4px 2px 16px; }
+  .intro p { margin: 0; color: var(--suave); max-width: 62ch; }
+  .caja { background: var(--tiza); border: 1px solid var(--linea); border-radius: 12px; margin-bottom: 14px; overflow: hidden; }
+  .caja.mia { border-color: var(--pista); box-shadow: inset 4px 0 0 var(--bola); }
+  .caja.revisar { border-color: #e9c46a; }
+  .caja-cab { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--linea); flex-wrap: wrap; }
+  .caja-cab .der { margin-left: auto; }
+  .caja-cuerpo { padding: 12px 16px; }
+  .sub { font-weight: 600; font-size: 13.5px; color: var(--suave); margin: 14px 0 6px; }
+  .nota { font-size: 13px; color: var(--suave); }
+  .vacio { text-align: center; color: var(--suave); padding: 36px 12px; }
+  .rejilla { display: grid; gap: 14px; grid-template-columns: 1fr; align-items: start; }
+  .rejilla > .caja { margin-bottom: 0; }
+  @media (min-width: 900px) {
+    .cab { padding: 16px 24px 0; }
+    main { padding: 24px 24px 110px; }
+    .rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dos { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+    .dos > .caja { margin-bottom: 0; }
+  }
+
+  /* ---------- categorías ---------- */
+  .cat { display: inline-flex; align-items: center; font-family: var(--num); font-weight: 700; font-size: 14px; line-height: 1; padding: 4px 8px 3px; border-radius: 6px; white-space: nowrap; }
+  .cat-1000 { background: var(--pista); color: var(--bola); }
+  .cat-500 { background: var(--pista-2); color: var(--tiza); }
+  .cat-250 { background: #8fb8a3; color: var(--pista); }
+  .cat-100 { background: var(--linea); color: var(--tinta); }
+  .cat-gs { background: var(--bola); color: var(--pista); }
+
+  /* ---------- ranking (lo memorable: marcador) ---------- */
+  .ranking { list-style: none; margin: 0; padding: 0; }
+  .ranking li { display: grid; grid-template-columns: 56px 28px minmax(0, 1fr) auto auto; align-items: center; gap: 8px; padding: 10px 16px 10px 10px; border-bottom: 1px solid var(--linea); cursor: pointer; }
+  .ranking li:last-child { border-bottom: 0; }
+  .ranking li:hover { background: #f8faf8; }
+  .ranking li.yo { background: var(--bola-claro); }
+  .ranking .pos { font-family: var(--num); font-weight: 700; font-size: 34px; line-height: 1; text-align: right; color: var(--pista); font-variant-numeric: tabular-nums; }
+  .ranking li:nth-child(-n+3) .pos { font-size: 40px; }
+  .ranking .mov { font-family: var(--num); font-size: 14px; font-weight: 600; text-align: center; color: var(--suave); }
+  .mov.sube { color: var(--pista-2); } .mov.baja { color: var(--rojo); }
+  .ranking .nom b { display: block; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ranking .nom small { color: var(--suave); font-size: 13px; }
+  .ranking .pts { font-family: var(--num); font-weight: 700; font-size: 24px; text-align: right; font-variant-numeric: tabular-nums; min-width: 64px; }
+  .ranking .pts small { display: block; font-family: Barlow, system-ui, sans-serif; font-weight: 500; font-size: 11.5px; color: var(--suave); }
+  .cabecera-ranking { display: flex; align-items: end; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  @media (min-width: 900px) { .ranking li { grid-template-columns: 70px 34px minmax(0, 1fr) 110px 90px; } }
+
+  /* ---------- tablas y partidos ---------- */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { font-size: 12px; color: var(--suave); font-weight: 600; text-align: right; padding: 4px 5px; border-bottom: 1px solid var(--linea); }
+  td { padding: 7px 5px; text-align: right; border-bottom: 1px solid #edf1ee; font-variant-numeric: tabular-nums; }
+  th:nth-child(-n+2), td:nth-child(-n+2) { text-align: left; }
+  td:first-child { color: var(--suave); width: 22px; }
+  tr:last-child td { border-bottom: 0; }
+  tr.yo td { background: var(--bola-claro); font-weight: 600; }
+  td.enlace { cursor: pointer; }
+  td.pts { font-family: var(--num); font-weight: 700; font-size: 16px; }
+  .partido { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #edf1ee; }
+  .partido:last-child { border-bottom: 0; }
+  .partido .info { flex: 1; min-width: 0; }
+  .partido .vs { font-weight: 600; }
+  .partido .res { font-size: 13.5px; color: var(--suave); }
+  .partido .res b { color: var(--pista); }
+  .pend { color: #95a29b; font-style: italic; }
+
+  /* ---------- botones y formularios ---------- */
+  .boton { border-radius: 10px; padding: 10px 16px; font-weight: 600; cursor: pointer; border: 1px solid transparent; white-space: nowrap; }
+  .boton.prim { background: var(--pista); color: var(--tiza); }
+  .boton.prim:hover { background: var(--pista-2); }
+  .boton.bola { background: var(--bola); color: var(--pista); }
+  .boton.sec { background: var(--tiza); border-color: var(--linea); }
+  .boton.sec:hover { background: var(--fondo); }
+  .boton.peq { padding: 7px 12px; font-size: 14px; border-radius: 9px; }
+  .boton.peligro { background: var(--rojo); color: #fff; }
+  .boton.texto { background: none; border: 0; color: var(--pista-2); padding: 6px 4px; }
+  .boton.texto.rojo { color: var(--rojo); }
+  .boton:disabled { opacity: .5; cursor: default; }
+  .buscar { width: 100%; max-width: 440px; padding: 11px 13px; border: 1px solid var(--linea); border-radius: 11px; background: var(--tiza); }
+  .campo { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+  .campo label { font-weight: 600; font-size: 14px; }
+  .campo input, .campo select, .campo textarea { padding: 10px 12px; border: 1px solid var(--linea); border-radius: 10px; background: var(--tiza); }
+  .campo .nota { margin: 0; }
+  .fila-botones { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .fila-botones .der { margin-left: auto; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; align-items: center; }
+  .chip { border: 1px solid var(--linea); background: var(--tiza); border-radius: 999px; padding: 7px 13px; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .chip.activo { background: var(--pista); border-color: var(--pista); color: var(--tiza); }
+  .etiqueta { font-size: 12.5px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--pista-claro); color: var(--pista); white-space: nowrap; }
+  .etiqueta.ambar { background: var(--ambar-claro); color: var(--ambar); }
+  .etiqueta.rojo { background: var(--rojo-claro); color: var(--rojo); }
+  .etiqueta.azul { background: var(--azul-claro); color: var(--azul); }
+  .etiqueta.gris { background: var(--fondo); color: var(--suave); }
+  .error-caja { background: var(--rojo-claro); color: var(--rojo); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; }
+  .info-caja { background: var(--pista-claro); color: var(--pista); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; }
+  .cargando { display: flex; justify-content: center; padding: 60px 0; }
+  .cargando::after { content: ''; width: 28px; height: 28px; border-radius: 50%; border: 3px solid var(--pista-claro); border-top-color: var(--pista); animation: g .8s linear infinite; }
+  @keyframes g { to { transform: rotate(360deg); } }
+
+  /* ---------- cuadro de torneo ---------- */
+  .cuadro { display: flex; gap: 14px; overflow-x: auto; padding: 4px 2px 10px; }
+  .ronda { display: flex; flex-direction: column; min-width: 200px; }
+  .ronda > h4 { margin: 0 0 8px; font-size: 13px; color: var(--suave); font-weight: 600; }
+  .ronda-cuerpo { flex: 1; display: flex; flex-direction: column; justify-content: space-around; gap: 10px; }
+  .llave { background: var(--tiza); border: 1px solid var(--linea); border-radius: 9px; overflow: hidden; font-size: 14px; }
+  .llave.mia { border-color: var(--pista); box-shadow: inset 3px 0 0 var(--bola); }
+  .llave .lado { display: flex; justify-content: space-between; gap: 8px; padding: 6px 10px; }
+  .llave .lado + .lado { border-top: 1px solid #edf1ee; }
+  .llave .lado.gana { font-weight: 700; }
+  .llave .lado.bye { color: #9aa79f; font-style: italic; }
+  .llave .marcador-llave { font-family: var(--num); font-size: 13.5px; color: var(--suave); padding: 4px 10px 6px; border-top: 1px dashed #edf1ee; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+  .campeon { display: flex; gap: 14px; align-items: center; padding: 14px 16px; background: var(--pista); color: var(--tiza); }
+  .campeon .copa { font-size: 34px; }
+  .campeon b { font-family: var(--num); font-size: 24px; display: block; line-height: 1.1; }
+  .campeon small { color: #c3dccf; }
+
+  /* ---------- histórico ---------- */
+  .titulo { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid #edf1ee; }
+  .titulo:last-child { border-bottom: 0; }
+  .titulo .copa { font-size: 22px; width: 30px; text-align: center; }
+  .titulo .info { flex: 1; min-width: 0; }
+  .titulo .info small { display: block; color: var(--suave); }
+
+  /* ---------- jugadores (profes) y movimientos ---------- */
+  .jug { display: flex; align-items: center; gap: 9px; padding: 9px 0; border-bottom: 1px solid #edf1ee; flex-wrap: wrap; }
+  .jug:last-child { border-bottom: 0; }
+  .jug .nom { flex: 1; min-width: 160px; }
+  .jug .nom small { display: block; color: var(--suave); font-size: 12.5px; }
+  .ic { width: 26px; height: 26px; border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex: none; }
+  .ic.sube { background: var(--pista-claro); color: var(--pista-2); } .ic.baja { background: var(--rojo-claro); color: var(--rojo); }
+  .ic.queda { background: var(--fondo); color: var(--suave); } .ic.alta { background: var(--azul-claro); color: var(--azul); }
+  .ic.manual { background: var(--morado-claro); color: var(--morado); } .ic.corrido { background: var(--ambar-claro); color: var(--ambar); }
+  .mover { border: 1px solid var(--linea); border-radius: 8px; padding: 5px 6px; background: var(--tiza); font-size: 13.5px; }
+  .pago { border-radius: 999px; padding: 5px 11px; font-size: 13px; font-weight: 600; border: 1px solid var(--linea); background: var(--tiza); color: var(--suave); cursor: pointer; }
+  .pago.si { background: var(--pista-claro); border-color: #c5ddd0; color: var(--pista); }
+  .avisos { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 5px; font-size: 13.5px; }
+  .avisos li { padding: 6px 10px; border-radius: 8px; background: var(--ambar-claro); color: #6d4700; }
+  .barra-fija { position: fixed; left: 0; right: 0; bottom: 0; background: var(--tiza); border-top: 1px solid var(--linea); padding: 10px 14px calc(10px + env(safe-area-inset-bottom)); z-index: 5; }
+  .barra-fija .in { max-width: 1100px; margin: 0 auto; display: flex; gap: 8px; align-items: center; }
+  .barra-fija .txt { flex: 1; font-size: 13.5px; color: var(--suave); }
+
+  /* ---------- ventanas ---------- */
+  .modal { position: fixed; inset: 0; background: rgba(15, 30, 22, .55); display: flex; align-items: flex-end; justify-content: center; z-index: 20; }
+  .modal.oculto { display: none; }
+  .hoja { background: var(--tiza); width: 100%; max-width: 540px; max-height: 92vh; overflow-y: auto; border-radius: 18px 18px 0 0; padding: 20px 18px calc(18px + env(safe-area-inset-bottom)); }
+  @media (min-width: 640px) { .modal { align-items: center; } .hoja { border-radius: 16px; } }
+  .hoja h3 { font-size: 20px; margin: 0 0 4px; }
+  .hoja .nota { margin-bottom: 14px; }
+  .seg { display: flex; border: 1px solid var(--linea); border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+  .seg button { flex: 1; border: 0; background: var(--tiza); padding: 9px 6px; cursor: pointer; color: var(--suave); font-weight: 600; }
+  .seg button + button { border-left: 1px solid var(--linea); }
+  .seg button.activo { background: var(--pista); color: var(--tiza); }
+  .marcador { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+  .marcador th { text-align: center; color: var(--tinta); font-size: 14px; padding: 0 4px 2px; border: 0; }
+  .marcador th:first-child { text-align: left; }
+  .marcador td { border: 0; text-align: center; padding: 0 4px; }
+  .marcador td:first-child { text-align: left; color: var(--suave); font-size: 14px; width: auto; }
+  .marcador select, .marcador input { width: 100%; max-width: 92px; padding: 9px 6px; border: 1px solid var(--linea); border-radius: 9px; background: var(--tiza); text-align: center; font-size: 16px; }
+  .tb-fila label { font-size: 13px; color: var(--suave); display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+  .tb-fila input { max-width: 70px; padding: 6px; font-size: 14px; }
+  .previa { border-radius: 10px; padding: 10px 12px; margin: 6px 0 14px; font-size: 14.5px; }
+  .previa.ok { background: var(--pista-claro); color: var(--pista); }
+  .previa.mal { background: var(--rojo-claro); color: var(--rojo); }
+  .acciones { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+  .acciones .izq { margin-right: auto; }
+  .elegir2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .elegir2 button { padding: 12px 8px; border-radius: 10px; border: 1px solid var(--linea); background: var(--tiza); cursor: pointer; font-weight: 600; }
+  .elegir2 button.activo { border-color: var(--pista); background: var(--pista-claro); color: var(--pista); }
+  .lista-elegir { border: 1px solid var(--linea); border-radius: 10px; max-height: 240px; overflow-y: auto; margin-bottom: 12px; }
+  .lista-elegir button { display: flex; width: 100%; text-align: left; padding: 10px 12px; border: 0; border-bottom: 1px solid #edf1ee; background: none; cursor: pointer; }
+  .lista-elegir button:last-child { border-bottom: 0; }
+  .lista-elegir button.sel { background: var(--pista-claro); font-weight: 600; }
+  .ficha-cab { display: flex; gap: 14px; align-items: center; margin-bottom: 14px; }
+  .ficha-cab .pos { font-family: var(--num); font-size: 52px; font-weight: 700; line-height: 1; color: var(--pista); }
+  .ficha-cab b { font-family: var(--num); font-size: 26px; display: block; line-height: 1.05; }
+  .datos-ficha { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+  .datos-ficha div { background: var(--fondo); border-radius: 10px; padding: 8px 10px; }
+  .datos-ficha b { font-family: var(--num); font-size: 22px; display: block; line-height: 1.1; }
+  .datos-ficha small { color: var(--suave); font-size: 12.5px; }
+  .toast { position: fixed; left: 50%; top: 14px; transform: translateX(-50%) translateY(-16px); background: var(--tinta); color: #fff; padding: 11px 16px; border-radius: 12px; font-size: 14.5px; opacity: 0; visibility: hidden; transition: transform .25s, opacity .25s, visibility .25s; z-index: 30; max-width: 90vw; }
+  .toast.ver { transform: translateX(-50%) translateY(0); opacity: 1; visibility: visible; }
+  .oculto { display: none !important; }
+</style>
+</head>
+<body>
+  <header class="cab">
+    <div class="cab-fila">
+      <div class="marca"><b>Ranking de tenis</b><small>Club de Campo Laukariz</small></div>
+      <button class="cuenta" id="cuenta">Entrar</button>
+    </div>
+    <nav class="pestanas" id="pestanas"></nav>
+  </header>
+  <main id="vista"><div class="cargando"></div></main>
+  <div class="modal oculto" id="modal"><div class="hoja" id="hoja" role="dialog" aria-modal="true"></div></div>
+  <div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ===================== conexión con Google ===================== */
+// Dirección del motor (la "URL de la aplicación web" de Apps Script).
+var API_URL = 'PEGA_AQUI_LA_URL_DEL_MOTOR';
+
+/* ===================== utilidades ===================== */
+function norm(t) { return String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ').trim().toLowerCase(); }
+function leerLS(k) { try { return localStorage.getItem('rk3_' + k); } catch (e) { return null; } }
+function guardarLS(k, v) { try { if (v === null || v === undefined) localStorage.removeItem('rk3_' + k); else localStorage.setItem('rk3_' + k, v); } catch (e) {} }
+function leerSS(k) { try { return sessionStorage.getItem('rk3_' + k); } catch (e) { return null; } }
+function guardarSS(k, v) { try { if (v === null || v === undefined) sessionStorage.removeItem('rk3_' + k); else sessionStorage.setItem('rk3_' + k, v); } catch (e) {} }
+function h(tag, props) {
+  var e = document.createElement(tag), valor;
+  if (props) Object.keys(props).forEach(function (k) {
+    var v = props[k];
+    if (v === null || v === undefined || v === false) return;
+    if (k === 'class') e.className = v;
+    else if (k === 'text') e.textContent = v;
+    else if (k === 'value') valor = v;
+    else if (k === 'checked' || k === 'disabled' || k === 'selected') e[k] = true;
+    else if (k.indexOf('on') === 0) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v === true ? '' : v);
+  });
+  for (var i = 2; i < arguments.length; i++) poner(e, arguments[i]);
+  if (valor !== undefined) e.value = valor;
+  return e;
+}
+function poner(e, c) {
+  if (c === null || c === undefined || c === false) return;
+  if (Array.isArray(c)) c.forEach(function (x) { poner(e, x); });
+  else e.appendChild(typeof c === 'object' ? c : document.createTextNode(String(c)));
+}
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('ver');
+  clearTimeout(toast._t); toast._t = setTimeout(function () { t.classList.remove('ver'); }, 3000);
+}
+var MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+function fecha(iso) { if (!iso) return ''; var p = String(iso).slice(0, 10).split('-'); return +p[2] + ' ' + MESES[+p[1] - 1] + ' ' + p[0]; }
+function diasHasta(iso) { if (!iso) return null; return Math.round((new Date(iso + 'T12:00:00') - new Date(S.d.hoy + 'T12:00:00')) / 86400000); }
+function miles(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+function catChip(cat) { return cat ? h('span', { class: 'cat cat-' + cat, text: String(cat) }) : null; }
+var RONDA = { F: 'Final', SF: 'Semifinales', QF: 'Cuartos', R16: 'Octavos', R32: 'Dieciseisavos', R64: '1/32', R128: '1/64' };
+function nombreRonda(r, R) { return ['F', 'SF', 'QF', 'R16', 'R32', 'R64', 'R128'][R - r]; }
+
+/* ===================== estado ===================== */
+var S = {
+  d: null, error: null, vista: leerLS('vista') || 'ranking', token: leerLS('token'), buscar: '',
+  adm: { token: leerSS('adm'), sub: 'jornada', jugadores: null, propuesta: null, estado: null, revisados: {}, buscar: '', verBajas: false }
+};
+function jugador(id) { return S.d && S.d.jugadores.filter(function (j) { return j.id === id; })[0] || (S.adm.jugadores || []).filter(function (j) { return j.id === id; })[0] || null; }
+function nick(id) { var j = jugador(id); return j ? (j.nick || j.nombre) : (id ? 'Exjugador' : '—'); }
+function soyYo(id) { return S.d && S.d.yo && S.d.yo.id === id; }
+
+/* ===================== servidor ===================== */
+function llamar(accion, args, ok, fallo) {
+  function error(m) {
+    if (m.indexOf('SESION_CADUCADA') >= 0) {
+      if (accion.indexOf('admin') === 0) { S.adm.token = null; guardarSS('adm', null); toast('La sesión de profesor ha caducado. Vuelve a entrar.'); }
+      else { S.token = null; guardarLS('token', null); toast('Tu sesión ha caducado. Vuelve a entrar.'); }
+      cerrarModal(); cargar(); return;
+    }
+    (fallo || toast)(m);
+  }
+  fetch(API_URL, { method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                   body: JSON.stringify({ accion: accion, args: args || [] }) })
+    .then(function (r) { return r.text(); })
+    .then(function (t) {
+      var d;
+      try { d = JSON.parse(t); } catch (e) { throw new Error('El servidor no ha respondido bien. Inténtalo de nuevo en unos segundos.'); }
+      if (!d.ok) throw new Error(d.error);
+      ok(d.datos);
+    })
+    .catch(function (e) {
+      var m = (e && e.message) || String(e);
+      if (/Failed to fetch|NetworkError|Load failed/i.test(m)) m = 'No hay conexión con el servidor. Revisa internet e inténtalo de nuevo.';
+      error(m);
+    });
+}
+function cargar(despues) {
+  llamar('datos', [S.token || ''], function (d) {
+    S.d = d; S.error = null;
+    if (S.token && !d.yo) { S.token = null; guardarLS('token', null); }
+    pintar(); if (despues) despues();
+  }, function (m) { S.error = m; pintar(); });
+}
+function trasCambio(d, msg) { S.d = d; if (msg) toast(msg); cerrarModal(); pintar(); }
+
+/* ===================== cabecera ===================== */
+var PESTANAS = [['ranking', 'Ranking'], ['jornada', 'Jornada'], ['torneos', 'Torneos'], ['retos', 'Retos'], ['historico', 'Histórico'], ['prof', 'Profesores']];
+document.getElementById('cuenta').onclick = function () { if (S.d && S.d.yo) abrirPerfil(); else abrirEntrar(); };
+
+function pintar() {
+  var nav = document.getElementById('pestanas');
+  nav.innerHTML = '';
+  var pendientes = S.d && S.d.yo ? S.d.retos.filter(function (r) { return r.b === S.d.yo.id && r.estado === 'propuesto'; }).length : 0;
+  PESTANAS.forEach(function (p) {
+    poner(nav, h('button', { class: S.vista === p[0] ? 'activa' : null, onclick: function () { S.vista = p[0]; guardarLS('vista', p[0]); pintar(); window.scrollTo(0, 0); } },
+      p[1], p[0] === 'retos' && pendientes ? h('span', { class: 'aviso', text: String(pendientes) }) : null));
+  });
+  var c = document.getElementById('cuenta');
+  c.textContent = S.d && S.d.yo ? S.d.yo.nick : 'Entrar';
+  c.classList.toggle('dentro', !!(S.d && S.d.yo));
+  var v = document.getElementById('vista');
+  v.innerHTML = '';
+  if (S.error) return poner(v, [h('div', { class: 'error-caja', text: S.error }), h('button', { class: 'boton sec', text: 'Reintentar', onclick: function () { S.error = null; pintar(); cargar(); } })]);
+  if (!S.d) return poner(v, h('div', { class: 'cargando' }));
+  ({ ranking: vistaRanking, jornada: vistaJornada, torneos: vistaTorneos, retos: vistaRetos, historico: vistaHistorico, prof: vistaProfesores }[S.vista] || vistaRanking)(v);
+}
+
+/* ===================== RANKING ===================== */
+function vistaRanking(v) {
+  var d = S.d;
+  poner(v, h('div', { class: 'cabecera-ranking' },
+    h('div', { class: 'intro', style: 'margin:0' }, h('h1', { text: 'Ranking' }),
+      h('p', { text: 'Suma de los puntos de los últimos 12 meses: jornadas, torneos y retos. Actualizado el ' + fecha(d.hoy) + '.' })),
+    h('input', { class: 'buscar', type: 'search', placeholder: 'Buscar jugador…', value: S.buscar, oninput: function (e) { S.buscar = e.target.value; lista(); } })));
+  var cont = h('div', { class: 'caja' });
+  poner(v, cont);
+  if (d.yo) {
+    var mio = d.ranking.filter(function (r) { return r.id === d.yo.id; })[0];
+    if (mio && mio.caducan) poner(v, h('p', { class: 'nota', text: 'En el próximo mes caducan ' + miles(mio.caducan) + ' de tus puntos: defiéndelos jugando.' }));
+  }
+  poner(v, h('p', { class: 'nota', text: 'La flecha compara tu puesto con el de hace un mes. Pulsa en un jugador para ver su ficha.' }));
+  function lista() {
+    cont.innerHTML = '';
+    var q = norm(S.buscar);
+    var filas = d.ranking.filter(function (r) { var j = jugador(r.id); return !q || norm(j.nick).indexOf(q) >= 0 || norm(j.nombre).indexOf(q) >= 0; });
+    if (!filas.length) return poner(cont, h('div', { class: 'vacio', text: 'Nadie coincide con la búsqueda.' }));
+    poner(cont, h('ol', { class: 'ranking' }, filas.map(function (r) {
+      var j = jugador(r.id), mov = r.antes ? r.antes - r.pos : 0;
+      return h('li', { class: soyYo(r.id) ? 'yo' : null, onclick: function () { abrirFicha(r.id); }, tabindex: '0', onkeydown: function (e) { if (e.key === 'Enter') abrirFicha(r.id); } },
+        h('span', { class: 'pos', text: String(r.pos) }),
+        h('span', { class: 'mov ' + (mov > 0 ? 'sube' : mov < 0 ? 'baja' : ''), text: mov > 0 ? '▲' + mov : mov < 0 ? '▼' + (-mov) : '–', title: 'Respecto a hace un mes' }),
+        h('span', { class: 'nom' }, h('b', { text: j.nick }), h('small', { text: j.nick !== j.nombre ? j.nombre : (j.grupo ? 'Grupo ' + j.grupo : '') })),
+        h('span', null, catChip(j.cat)),
+        h('span', { class: 'pts' }, miles(r.puntos), h('small', { text: 'puntos' })));
+    })));
+  }
+  lista();
+}
+
+/* ===================== FICHA ===================== */
+function abrirFicha(id) {
+  var d = S.d, j = jugador(id), r = d.ranking.filter(function (x) { return x.id === id; })[0] || {};
+  var hoja = document.getElementById('hoja');
+  hoja.innerHTML = '';
+  var titulos = d.historico.filter(function (x) { return x.campeon === id || x.subcampeon === id; });
+  var vigentes = d.puntos.filter(function (p) { return p.jugador === id && p.fecha <= d.hoy && p.caduca > d.hoy; }).sort(function (a, b) { return a.caduca < b.caduca ? -1 : 1; });
+  var partidos = [].concat(d.jornada ? [].concat.apply([], d.jornada.grupos.map(function (g) { return g.partidos; })) : [], d.retos, d.partidosAnteriores,
+    [].concat.apply([], d.torneos.map(function (t) { return t.partidos; })))
+    .filter(function (p) { return p.texto && (p.a === id || p.b === id); })
+    .sort(function (a, b) { return (b.fecha || '') < (a.fecha || '') ? -1 : 1; }).slice(0, 8);
+  var victorias = partidos.filter(function (p) { return (p.ganador === 'A' ? p.a : p.b) === id; }).length;
+  poner(hoja, [
+    h('div', { class: 'ficha-cab' }, h('span', { class: 'pos', text: r.pos ? String(r.pos) : '–' }),
+      h('div', null, h('b', { text: j.nick }), j.nick !== j.nombre ? h('span', { class: 'nota', text: j.nombre }) : null)),
+    h('div', { class: 'datos-ficha' },
+      h('div', null, h('b', { text: miles(r.puntos || 0) }), h('small', { text: 'puntos' })),
+      h('div', null, h('b', { text: j.grupo ? 'G' + j.grupo : '–' }), h('small', { text: j.cat ? 'Categoría ' + j.cat : 'Sin grupo' })),
+      h('div', null, h('b', { text: String(titulos.filter(function (t) { return t.campeon === id; }).length) }), h('small', { text: 'títulos' }))),
+    d.yo ? (j.telefono ? h('p', null, 'Teléfono: ', h('a', { href: 'tel:' + j.telefono.replace(/\s/g, ''), text: j.telefono })) : h('p', { class: 'nota', text: 'No ha puesto teléfono.' }))
+         : h('p', { class: 'nota', text: 'Entra con tu cuenta para ver su teléfono.' }),
+    d.yo && !soyYo(id) ? h('div', { class: 'fila-botones', style: 'margin-bottom:10px' }, h('button', { class: 'boton bola peq', text: 'Retar a ' + j.nick, onclick: function () { confirmarReto(id); } })) : null,
+    titulos.length ? h('div', { class: 'sub', text: 'Palmarés' }) : null,
+    titulos.map(function (t) { return h('div', { class: 'titulo' }, h('span', { class: 'copa', text: t.campeon === id ? '🏆' : '🥈' }),
+      h('div', { class: 'info' }, t.titulo, h('small', { text: (t.campeon === id ? 'Campeón' : 'Subcampeón') + ' · ' + fecha(t.fecha) }))); }),
+    h('div', { class: 'sub', text: 'Puntos que cuentan ahora' }),
+    vigentes.length ? h('table', null, h('tbody', null, vigentes.map(function (p) {
+      return h('tr', null, h('td', { text: '' }), h('td', null, p.concepto, h('div', { class: 'nota', text: 'Caducan el ' + fecha(p.caduca) })), h('td', { class: 'pts', text: miles(p.puntos) }));
+    }))) : h('p', { class: 'nota', text: 'Todavía no tiene puntos.' }),
+    partidos.length ? h('div', { class: 'sub', text: 'Últimos partidos (' + victorias + ' ganados de ' + partidos.length + ')' }) : null,
+    partidos.map(function (p) {
+      var gana = (p.ganador === 'A' ? p.a : p.b) === id, rival = p.a === id ? p.b : p.a;
+      return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs', text: (gana ? 'Gana a ' : 'Pierde con ') + nick(rival) }),
+        h('div', { class: 'res', text: (p.tipo === 'Reto' ? 'Reto' : p.tipo === 'Torneo' ? 'Torneo' : 'Jornada') + ' · ' + (p.texto === 'W.O.' ? 'no jugado' : p.texto) + (p.fecha ? ' · ' + fecha(p.fecha) : '') })));
+    }),
+    h('div', { class: 'acciones', style: 'margin-top:12px' }, h('button', { class: 'boton sec', text: 'Cerrar', onclick: cerrarModal }))
+  ]);
+  abrirModal();
+}
+
+/* ===================== JORNADA ===================== */
+function vistaJornada(v) {
+  var d = S.d, J = d.jornada;
+  if (!J) return poner(v, [h('div', { class: 'intro' }, h('h1', { text: 'Jornada' })), h('div', { class: 'caja' }, h('div', { class: 'vacio', text: 'La temporada todavía no ha empezado. En cuanto los profesores publiquen la primera jornada verás aquí tu grupo.' }))]);
+  var quedan = diasHasta(J.fin);
+  poner(v, h('div', { class: 'intro' }, h('h1', { text: 'Jornada ' + J.numero }),
+    h('p', { text: 'Del ' + fecha(J.inicio) + ' al ' + fecha(J.fin) + (quedan !== null ? (quedan >= 0 ? ' · quedan ' + quedan + ' días' : ' · plazo terminado, a la espera del cierre') : '') +
+      '. Cada grupo es un torneo de su categoría: el 1º se lleva todos sus puntos y sube.' })));
+  var mio = d.yo ? J.grupos.filter(function (g) { return g.jugadores.indexOf(d.yo.id) >= 0; })[0] : null;
+  if (mio) {
+    var misP = mio.partidos.filter(function (p) { return p.a === d.yo.id || p.b === d.yo.id; });
+    poner(v, h('div', { class: 'dos', style: 'margin-bottom:14px' },
+      h('div', { class: 'caja mia' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Tus partidos' }), h('span', { class: 'der' }, catChip(mio.cat))),
+        h('div', { class: 'caja-cuerpo' }, misP.map(function (p) { return filaPartido(p, { mio: true }); }))),
+      cajaGrupo(mio, true)));
+  } else if (!d.yo) {
+    poner(v, h('div', { class: 'info-caja' }, 'Entra con tu cuenta para meter tus resultados. ', h('button', { class: 'boton texto', text: 'Entrar', onclick: abrirEntrar })));
+  }
+  var cats = [];
+  J.grupos.forEach(function (g) { if (cats.indexOf(g.cat) < 0) cats.push(g.cat); });
+  cats.forEach(function (cat) {
+    var gs = J.grupos.filter(function (g) { return g.cat === cat && g !== mio; });
+    if (!gs.length) return;
+    poner(v, h('div', { class: 'sub', style: 'display:flex;gap:8px;align-items:center;margin-top:18px' }, catChip(cat), 'Categoría ' + cat + ': el campeón suma ' + miles(d.reglas.puntosPuesto[cat] ? d.reglas.puntosPuesto[cat][0] : cat)));
+    poner(v, h('div', { class: 'rejilla' }, gs.map(function (g) { return cajaGrupo(g, false); })));
+  });
+}
+
+function cajaGrupo(g, esMio) {
+  var d = S.d;
+  var tabla = h('table', null,
+    h('thead', null, h('tr', null, ['#', 'Jugador', 'PJ', 'V', 'Sets', 'Juegos', 'Ptos'].map(function (c) { return h('th', { text: c }); }))),
+    h('tbody', null, g.tabla.map(function (x) {
+      return h('tr', { class: soyYo(x.id) ? 'yo' : null },
+        h('td', { text: String(x.puesto) }), h('td', { class: 'enlace', text: nick(x.id), onclick: function () { abrirFicha(x.id); } }),
+        h('td', { text: String(x.jugados) }), h('td', { text: String(x.victorias) }),
+        h('td', { text: x.setsG + '-' + x.setsP }), h('td', { text: x.juegosG + '-' + x.juegosP }), h('td', { class: 'pts', text: miles(x.puntos) }));
+    })));
+  var otros = esMio && d.yo ? g.partidos.filter(function (p) { return p.a !== d.yo.id && p.b !== d.yo.id; }) : g.partidos;
+  return h('div', { class: 'caja' + (esMio ? ' mia' : '') },
+    h('div', { class: 'caja-cab' }, h('h3', { text: 'Grupo ' + g.numero }), esMio ? h('span', { class: 'etiqueta', text: 'Tu grupo' }) : null, h('span', { class: 'der' }, catChip(g.cat))),
+    h('div', { class: 'caja-cuerpo' }, tabla,
+      h('p', { class: 'nota', style: 'margin:8px 0 0' }, 'Ptos: lo que se llevaría cada uno si la jornada acabara hoy.'),
+      otros.length ? h('div', { class: 'sub', text: esMio ? 'Resto de partidos' : 'Partidos' }) : null,
+      otros.map(function (p) { return filaPartido(p, {}); })));
+}
+
+function filaPartido(p, op) {
+  var d = S.d, yo = d.yo ? d.yo.id : null;
+  var titulo = op.mio ? 'Contra ' + nick(p.a === yo ? p.b : p.a) : nick(p.a) + ' – ' + nick(p.b);
+  var res = p.texto ? h('div', { class: 'res' }, (p.texto === 'W.O.' ? 'No jugado' : p.texto) + ' · gana ', h('b', { text: nick(p.ganador === 'A' ? p.a : p.b) }))
+                    : h('div', { class: 'res' }, h('span', { class: 'pend', text: 'Pendiente' }));
+  var botones = [];
+  if (op.mio || op.admin) {
+    botones.push(h('button', { class: 'boton peq ' + (p.texto ? 'sec' : 'prim'), text: p.texto ? 'Corregir' : 'Meter resultado', onclick: function () { abrirResultado(p, !!op.admin); } }));
+    if (p.texto) botones.push(h('button', { class: 'boton peq texto rojo', text: 'Borrar', onclick: function () { confirmarBorrar(p, !!op.admin); } }));
+  }
+  return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs', text: titulo }), res), botones);
+}
+
+/* ===================== RESULTADOS ===================== */
+var M = null;
+function esSetValido(a, b) { var hi = Math.max(a, b), lo = Math.min(a, b); return (hi === 6 && lo <= 4) || (hi === 7 && (lo === 5 || lo === 6)); }
+function esTB(a, b) { return Math.max(a, b) === 7 && Math.min(a, b) === 6; }
+
+function abrirResultado(p, admin) {
+  M = { p: p, admin: admin, noJugado: false, ganadorNJ: null, sets: [['', ''], ['', ''], ['', '']], tb: ['', '', ''], desempate: 'stb', stb: ['', ''] };
+  if (p.texto === 'W.O.') { M.noJugado = true; M.ganadorNJ = p.ganador; }
+  else if (p.texto) {
+    var t = p.texto, stb = t.match(/\((\d+)-(\d+)\)\s*$/);
+    if (stb) { M.stb = [stb[1], stb[2]]; t = t.replace(stb[0], ''); }
+    var re = /(\d+)-(\d+)(?:\((\d+)\))?/g, m, i = 0;
+    while ((m = re.exec(t)) && i < 3) { M.sets[i] = [m[1], m[2]]; M.tb[i] = m[3] || ''; i++; }
+    if (i === 3) M.desempate = 'tercer';
+  }
+  pintarResultado(); abrirModal();
+}
+function setsIguales() {
+  var s1 = M.sets[0], s2 = M.sets[1];
+  if (s1[0] === '' || s1[1] === '' || s2[0] === '' || s2[1] === '') return false;
+  return (+s1[0] > +s1[1] ? 1 : 0) + (+s2[0] > +s2[1] ? 1 : 0) === 1;
+}
+function marcadorActual() {
+  if (M.noJugado) return { noJugado: true, ganador: M.ganadorNJ };
+  var n = setsIguales() && M.desempate === 'tercer' ? 3 : 2, sets = [], tb = [];
+  for (var i = 0; i < n; i++) { sets.push(M.sets[i]); tb.push(M.tb[i] === '' ? null : M.tb[i]); }
+  return { noJugado: false, sets: sets, tb: tb, superTB: setsIguales() && M.desempate === 'stb' ? M.stb : null };
+}
+function validar() {
+  var p = M.p;
+  if (M.noJugado) return M.ganadorNJ ? { ok: 'No jugado · gana ' + nick(M.ganadorNJ === 'A' ? p.a : p.b) } : { mal: 'Elige a quién se le da el partido.' };
+  var m = marcadorActual(), a = 0, b = 0, partes = [];
+  for (var i = 0; i < m.sets.length; i++) {
+    var s = m.sets[i];
+    if (s[0] === '' || s[1] === '') return { mal: 'Completa el set ' + (i + 1) + '.' };
+    var x = +s[0], y = +s[1];
+    if (!esSetValido(x, y)) return { mal: 'El set ' + (i + 1) + ' (' + x + '-' + y + ') no es posible.' };
+    partes.push(x + '-' + y + (esTB(x, y) && m.tb[i] !== null ? '(' + m.tb[i] + ')' : ''));
+    if (x > y) a++; else b++;
+  }
+  if (m.superTB) {
+    if (m.superTB[0] === '' || m.superTB[1] === '') return { mal: 'Mete el resultado del super tie-break.' };
+    var sx = +m.superTB[0], sy = +m.superTB[1];
+    if (Math.max(sx, sy) < 10 || Math.abs(sx - sy) < 2 || (Math.max(sx, sy) > 10 && Math.abs(sx - sy) !== 2)) return { mal: 'El super tie-break se gana llegando a 10 con 2 de diferencia.' };
+    partes.push('(' + sx + '-' + sy + ')');
+    if (sx > sy) a++; else b++;
+  }
+  if (a < 2 && b < 2) return { mal: 'Falta el desempate.' };
+  return { ok: partes.join(' ') + ' · gana ' + nick(a > b ? p.a : p.b) };
+}
+function opcionesJuegos() { var o = [h('option', { value: '', text: '–' })]; for (var i = 0; i <= 7; i++) o.push(h('option', { value: String(i), text: String(i) })); return o; }
+
+function pintarResultado() {
+  var hoja = document.getElementById('hoja'), p = M.p;
+  hoja.innerHTML = '';
+  poner(hoja, [h('h3', { text: nick(p.a) + ' vs ' + nick(p.b) }),
+    h('p', { class: 'nota', text: (p.tipo === 'Reto' ? 'Reto' : p.tipo === 'Torneo' ? 'Partido de torneo' : 'Partido del grupo ' + p.grupo) + (M.admin ? ' · como profesor' : '') })]);
+  poner(hoja, h('div', { class: 'seg' },
+    h('button', { class: !M.noJugado ? 'activo' : null, text: 'Se jugó', onclick: function () { M.noJugado = false; pintarResultado(); } }),
+    h('button', { class: M.noJugado ? 'activo' : null, text: 'No se jugó', onclick: function () { M.noJugado = true; pintarResultado(); } })));
+  if (M.noJugado) {
+    poner(hoja, h('div', { class: 'sub', text: '¿A quién se le da el partido?' }));
+    poner(hoja, h('div', { class: 'elegir2' }, ['A', 'B'].map(function (q) {
+      return h('button', { class: M.ganadorNJ === q ? 'activo' : null, text: nick(q === 'A' ? p.a : p.b), onclick: function () { M.ganadorNJ = q; pintarResultado(); } });
+    })));
+  } else {
+    var filas = [], n = setsIguales() && M.desempate === 'tercer' ? 3 : 2;
+    for (var i = 0; i < n; i++) (function (i) {
+      filas.push(h('tr', null, h('td', { text: 'Set ' + (i + 1) }), [0, 1].map(function (j) {
+        return h('td', null, h('select', { value: M.sets[i][j], 'aria-label': 'Set ' + (i + 1) + ' ' + nick(j ? p.b : p.a), onchange: function (e) { M.sets[i][j] = e.target.value; pintarResultado(); } }, opcionesJuegos()));
+      })));
+      var s = M.sets[i];
+      if (s[0] !== '' && s[1] !== '' && esTB(+s[0], +s[1])) filas.push(h('tr', { class: 'tb-fila' }, h('td', { colspan: '3' }, h('label', null, 'Tie-break: puntos de quien lo perdió (opcional)',
+        h('input', { type: 'number', inputmode: 'numeric', min: '0', max: '30', value: M.tb[i], onchange: function (e) { M.tb[i] = e.target.value; pintarResultado(); } })))));
+    })(i);
+    poner(hoja, h('table', { class: 'marcador' }, h('thead', null, h('tr', null, h('th', { text: '' }), h('th', { text: nick(p.a) }), h('th', { text: nick(p.b) }))), h('tbody', null, filas)));
+    if (setsIguales()) {
+      poner(hoja, h('div', { class: 'sub', text: 'Vais 1-1: ¿cómo se desempató?' }));
+      poner(hoja, h('div', { class: 'seg' },
+        h('button', { class: M.desempate === 'stb' ? 'activo' : null, text: 'Super tie-break', onclick: function () { M.desempate = 'stb'; pintarResultado(); } }),
+        h('button', { class: M.desempate === 'tercer' ? 'activo' : null, text: 'Tercer set', onclick: function () { M.desempate = 'tercer'; pintarResultado(); } })));
+      if (M.desempate === 'stb') poner(hoja, h('table', { class: 'marcador' }, h('tbody', null, h('tr', null, h('td', { text: 'Super TB' }), [0, 1].map(function (j) {
+        return h('td', null, h('input', { type: 'number', inputmode: 'numeric', min: '0', max: '40', placeholder: '0', value: M.stb[j], 'aria-label': 'Super tie-break ' + nick(j ? p.b : p.a), onchange: function (e) { M.stb[j] = e.target.value; pintarResultado(); } }));
+      })))));
+    }
+  }
+  var val = validar();
+  poner(hoja, h('div', { class: 'previa ' + (val.ok ? 'ok' : 'mal'), text: val.ok ? 'Se guardará: ' + val.ok : val.mal }));
+  var guardar = h('button', { class: 'boton prim', text: 'Guardar resultado', disabled: !val.ok, onclick: function () {
+    guardar.disabled = true; guardar.textContent = 'Guardando…';
+    var m = marcadorActual();
+    if (M.admin) llamar('adminGuardarResultado', [S.adm.token, p.id, m], function () { cerrarModal(); toast('Resultado guardado'); cargar(); }, function (e) { guardar.disabled = false; guardar.textContent = 'Guardar resultado'; toast(e); });
+    else llamar('guardarResultado', [S.token, p.id, m], function (d) { trasCambio(d, 'Resultado guardado'); }, function (e) { guardar.disabled = false; guardar.textContent = 'Guardar resultado'; toast(e); });
+  } });
+  poner(hoja, h('div', { class: 'acciones' }, p.texto ? h('button', { class: 'boton texto rojo izq', text: 'Borrar resultado', onclick: function () { confirmarBorrar(p, M.admin); } }) : null,
+    h('button', { class: 'boton sec', text: 'Cancelar', onclick: cerrarModal }), guardar));
+}
+
+function confirmarBorrar(p, admin) {
+  confirmar('¿Borrar el resultado?', nick(p.a) + ' – ' + nick(p.b) + ': "' + p.texto + '". El partido vuelve a quedar pendiente' + (p.tipo === 'Reto' ? ' y se quitan los puntos del reto.' : '.'), 'Borrar resultado', true, function (fin) {
+    if (admin) llamar('adminBorrarResultado', [S.adm.token, p.id], function () { cerrarModal(); toast('Resultado borrado'); cargar(); }, fin);
+    else llamar('borrarResultado', [S.token, p.id], function (d) { trasCambio(d, 'Resultado borrado'); }, fin);
+  });
+}
+
+/* ===================== TORNEOS ===================== */
+function vistaTorneos(v) {
+  var d = S.d;
+  poner(v, h('div', { class: 'intro' }, h('h1', { text: 'Torneos' }),
+    h('p', { text: 'Tres Grand Slam al año y el Máster de los 8 mejores. Puntos: campeón ' + miles(d.reglas.puntosTorneo.W) + ', finalista ' + miles(d.reglas.puntosTorneo.F) +
+      ', semifinales ' + d.reglas.puntosTorneo.SF + ', cuartos ' + d.reglas.puntosTorneo.QF + ', octavos ' + d.reglas.puntosTorneo.R16 + '.' })));
+  if (!d.torneos.length) return poner(v, h('div', { class: 'caja' }, h('div', { class: 'vacio', text: 'Todavía no hay torneos. Cuando los profesores abran la inscripción del próximo, podrás apuntarte aquí.' })));
+  d.torneos.forEach(function (t) { poner(v, cajaTorneo(t, false)); });
+}
+
+function cajaTorneo(t, admin) {
+  var d = S.d, yo = d.yo ? d.yo.id : null, apuntado = yo && t.inscritos.indexOf(yo) >= 0;
+  var estado = { 'Inscripción': ['Inscripción abierta', 'azul'], 'En juego': ['En juego', 'ambar'], 'Finalizado': ['Terminado', 'gris'] }[t.estado] || [t.estado, 'gris'];
+  var cuerpo = [];
+  if (t.estado === 'Finalizado') cuerpo.push(h('div', { class: 'campeon' }, h('span', { class: 'copa', text: '🏆' }),
+    h('div', null, h('b', { text: nick(t.campeon) }), h('small', { text: 'Campeón · subcampeón: ' + nick(t.subcampeon) + ' · ' + fecha(t.fin) }))));
+  var dentro = h('div', { class: 'caja-cuerpo' });
+  if (t.estado === 'Inscripción') {
+    poner(dentro, h('p', { class: 'nota', style: 'margin-top:0', text: (t.cierreInscripcion ? 'Inscripción hasta el ' + fecha(t.cierreInscripcion) + '. ' : '') +
+      'Los mejores del ranking serán cabezas de serie; el resto se coloca por sorteo.' }));
+    poner(dentro, h('div', { class: 'sub', text: t.inscritos.length + ' inscritos' }));
+    poner(dentro, h('p', { style: 'margin:0 0 10px' }, t.inscritos.map(nick).join(', ') || 'Nadie todavía.'));
+    if (!admin) {
+      if (!yo) poner(dentro, h('button', { class: 'boton sec', text: 'Entrar para apuntarme', onclick: abrirEntrar }));
+      else poner(dentro, h('button', { class: 'boton ' + (apuntado ? 'sec' : 'bola'), text: apuntado ? 'Desapuntarme' : 'Apuntarme', onclick: function (e) {
+        e.target.disabled = true;
+        llamar(apuntado ? 'desapuntarse' : 'inscribirse', [S.token, t.id], function (dd) { trasCambio(dd, apuntado ? 'Te has desapuntado' : '¡Apuntado! Suerte'); }, function (m) { e.target.disabled = false; toast(m); });
+      } }));
+    }
+  } else {
+    poner(dentro, cuadroTorneo(t, admin));
+  }
+  return h('div', { class: 'caja' },
+    h('div', { class: 'caja-cab' }, h('span', { class: 'cat cat-gs', text: t.tipo === 'Máster' ? 'Máster' : 'Grand Slam' }), h('h2', { text: t.nombre }),
+      h('span', { class: 'etiqueta der ' + estado[1], text: estado[0] })),
+    cuerpo, dentro);
+}
+
+function cuadroTorneo(t, admin) {
+  var d = S.d, yo = d.yo ? d.yo.id : null, R = t.rondas, cols = [];
+  for (var r = 1; r <= R; r++) {
+    var ps = t.partidos.filter(function (p) { return p.ronda === r; }).sort(function (a, b) { return a.pos - b.pos; });
+    cols.push(h('div', { class: 'ronda' }, h('h4', { text: RONDA[nombreRonda(r, R)] || 'Ronda ' + r }), h('div', { class: 'ronda-cuerpo' }, ps.map(function (p) {
+      var bye = r === 1 && (!p.a || !p.b);
+      function lado(id, letra) {
+        return h('div', { class: 'lado' + (p.texto && p.ganador === letra ? ' gana' : '') + (!id && bye ? ' bye' : '') },
+          h('span', { text: id ? nick(id) : (bye ? 'exento' : '—') }), p.texto && p.ganador === letra ? h('span', { text: '✓' }) : null);
+      }
+      var mio = yo && (p.a === yo || p.b === yo) && p.a && p.b;
+      var acciones = null;
+      if (p.a && p.b && (admin || (mio && t.estado === 'En juego'))) acciones = h('button', { class: 'boton texto', style: 'padding:0', text: p.texto ? 'Corregir' : 'Meter resultado', onclick: function () { abrirResultado(p, admin); } });
+      return h('div', { class: 'llave' + (mio ? ' mia' : '') }, lado(p.a, 'A'), lado(p.b, 'B'),
+        (p.texto || acciones) ? h('div', { class: 'marcador-llave' }, h('span', { text: p.texto === 'W.O.' ? 'no jugado' : (p.texto || '') }), acciones) : null);
+    }))));
+  }
+  return h('div', { class: 'cuadro' }, cols);
+}
+
+/* ===================== RETOS ===================== */
+function vistaRetos(v) {
+  var d = S.d, yo = d.yo;
+  poner(v, h('div', { class: 'intro' }, h('h1', { text: 'Retos' }),
+    h('p', { text: 'Reta a quien quieras, cuando quieras. Ganar un reto suma ' + d.reglas.puntosReto + ' puntos y perderlo no resta nada.' })));
+  if (!yo) poner(v, h('div', { class: 'info-caja' }, 'Entra con tu cuenta para retar a otros jugadores. ', h('button', { class: 'boton texto', text: 'Entrar', onclick: abrirEntrar })));
+  else {
+    poner(v, h('div', { class: 'fila-botones', style: 'margin-bottom:14px' }, h('button', { class: 'boton bola', text: 'Retar a un jugador', onclick: elegirRival })));
+    var recibidos = d.retos.filter(function (r) { return r.b === yo.id && r.estado === 'propuesto'; });
+    var porJugar = d.retos.filter(function (r) { return r.estado === 'aceptado' && (r.a === yo.id || r.b === yo.id); });
+    var enviados = d.retos.filter(function (r) { return r.a === yo.id && r.estado === 'propuesto'; });
+    var grupoCaja = [];
+    if (recibidos.length) grupoCaja.push(h('div', { class: 'caja mia' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Te han retado' })), h('div', { class: 'caja-cuerpo' }, recibidos.map(function (r) {
+      return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs', text: nick(r.a) + ' te reta' }), h('div', { class: 'res', text: 'Desde el ' + fecha(r.creado) })),
+        h('button', { class: 'boton peq prim', text: 'Aceptar', onclick: function (e) { e.target.disabled = true; llamar('responderReto', [S.token, r.id, true], function (dd) { trasCambio(dd, 'Reto aceptado: quedad para jugar'); }); } }),
+        h('button', { class: 'boton peq texto rojo', text: 'Rechazar', onclick: function (e) { e.target.disabled = true; llamar('responderReto', [S.token, r.id, false], function (dd) { trasCambio(dd, 'Reto rechazado'); }); } }));
+    }))));
+    if (porJugar.length) grupoCaja.push(h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Pendientes de jugar' })), h('div', { class: 'caja-cuerpo' }, porJugar.map(function (r) {
+      var rival = r.a === yo.id ? r.b : r.a, j = jugador(rival);
+      return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs', text: 'Contra ' + nick(rival) }),
+        h('div', { class: 'res' }, j && j.telefono ? h('a', { href: 'tel:' + j.telefono.replace(/\s/g, ''), text: j.telefono }) : 'Sin teléfono')),
+        h('button', { class: 'boton peq prim', text: 'Meter resultado', onclick: function () { abrirResultado(r, false); } }),
+        h('button', { class: 'boton peq texto rojo', text: 'Cancelar', onclick: function () { cancelarReto(r); } }));
+    }))));
+    if (enviados.length) grupoCaja.push(h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Esperando respuesta' })), h('div', { class: 'caja-cuerpo' }, enviados.map(function (r) {
+      return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs', text: 'Has retado a ' + nick(r.b) }), h('div', { class: 'res', text: 'El ' + fecha(r.creado) })),
+        h('button', { class: 'boton peq texto rojo', text: 'Cancelar', onclick: function () { cancelarReto(r); } }));
+    }))));
+    if (grupoCaja.length) poner(v, h('div', { class: 'rejilla', style: 'margin-bottom:14px' }, grupoCaja));
+  }
+  var jugados = d.retos.filter(function (r) { return r.estado === 'jugado'; }).slice(0, 40);
+  poner(v, h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Últimos retos' })), h('div', { class: 'caja-cuerpo' },
+    jugados.length ? jugados.map(function (r) {
+      var g = r.ganador === 'A' ? r.a : r.b, q = r.ganador === 'A' ? r.b : r.a;
+      return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs', text: nick(g) + ' gana a ' + nick(q) }),
+        h('div', { class: 'res', text: (r.texto === 'W.O.' ? 'No jugado' : r.texto) + ' · ' + fecha(r.fecha) + ' · +' + d.reglas.puntosReto + ' puntos' })),
+        yo && (r.a === yo.id || r.b === yo.id) ? h('button', { class: 'boton peq texto', text: 'Corregir', onclick: function () { abrirResultado(r, false); } }) : null);
+    }) : h('div', { class: 'vacio', text: 'Todavía no se ha jugado ningún reto. ¡Estrénalo!' }))));
+}
+
+function cancelarReto(r) {
+  confirmar('¿Cancelar el reto?', 'Se borra el reto con ' + nick(r.a === S.d.yo.id ? r.b : r.a) + '.', 'Cancelar reto', true, function (fin) {
+    llamar('cancelarReto', [S.token, r.id], function (d) { trasCambio(d, 'Reto cancelado'); }, fin);
+  });
+}
+
+function elegirRival() {
+  var hoja = document.getElementById('hoja'), sel = null;
+  hoja.innerHTML = '';
+  var input = h('input', { class: 'buscar', style: 'max-width:none;margin-bottom:10px', type: 'search', placeholder: 'Buscar jugador…', oninput: lista });
+  var cont = h('div', { class: 'lista-elegir' });
+  var b = h('button', { class: 'boton bola', text: 'Enviar reto', disabled: true, onclick: function () { confirmarReto(sel); } });
+  function lista() {
+    cont.innerHTML = '';
+    var q = norm(input.value);
+    S.d.ranking.filter(function (r) { var j = jugador(r.id); return r.id !== S.d.yo.id && (!q || norm(j.nick).indexOf(q) >= 0 || norm(j.nombre).indexOf(q) >= 0); }).forEach(function (r) {
+      var j = jugador(r.id);
+      poner(cont, h('button', { class: sel === r.id ? 'sel' : null, onclick: function () { sel = r.id; b.disabled = false; lista(); } },
+        h('span', { style: 'flex:1', text: j.nick + (j.nick !== j.nombre ? ' (' + j.nombre + ')' : '') }), h('span', { class: 'nota', text: '#' + r.pos })));
+    });
+  }
+  lista();
+  poner(hoja, [h('h3', { text: 'Retar a un jugador' }), h('p', { class: 'nota', text: 'Le llegará el reto para que lo acepte. Si no tiene cuenta en la web, el reto queda aceptado directamente.' }),
+    input, cont, h('div', { class: 'acciones' }, h('button', { class: 'boton sec', text: 'Cancelar', onclick: cerrarModal }), b)]);
+  abrirModal();
+  setTimeout(function () { input.focus(); }, 50);
+}
+function confirmarReto(id) {
+  llamar('retar', [S.token, id], function (d) { S.vista = 'retos'; guardarLS('vista', 'retos'); trasCambio(d, 'Reto enviado a ' + nick(id)); });
+}
+
+/* ===================== HISTÓRICO ===================== */
+function vistaHistorico(v) {
+  var d = S.d;
+  poner(v, h('div', { class: 'intro' }, h('h1', { text: 'Histórico' }), h('p', { text: 'Campeones de cada torneo y de cada grupo de jornada.' })));
+  if (!d.historico.length) return poner(v, h('div', { class: 'caja' }, h('div', { class: 'vacio', text: 'El histórico se llenará en cuanto termine la primera jornada o el primer torneo.' })));
+  var torneos = d.historico.filter(function (x) { return x.tipo !== 'Jornada'; });
+  var jornadas = d.historico.filter(function (x) { return x.tipo === 'Jornada'; });
+  var conteo = {};
+  d.historico.forEach(function (x) { if (!conteo[x.campeon]) conteo[x.campeon] = { torneos: 0, grupos: 0 }; conteo[x.campeon][x.tipo === 'Jornada' ? 'grupos' : 'torneos']++; });
+  var palmares = Object.keys(conteo).map(function (id) { return { id: id, t: conteo[id].torneos, g: conteo[id].grupos }; })
+    .sort(function (a, b) { return b.t - a.t || b.g - a.g; }).slice(0, 15);
+  var bloques = [];
+  if (torneos.length) bloques.push(h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Grand Slam y Máster' })), h('div', { class: 'caja-cuerpo' }, torneos.map(function (x) {
+    return h('div', { class: 'titulo' }, h('span', { class: 'copa', text: '🏆' }), h('div', { class: 'info' }, h('b', { text: x.titulo }),
+      h('small', null, 'Campeón: ', h('a', { href: '#', text: nick(x.campeon), onclick: function (e) { e.preventDefault(); abrirFicha(x.campeon); } }),
+        ' · subcampeón: ' + nick(x.subcampeon) + ' · ' + fecha(x.fecha))));
+  }))));
+  bloques.push(h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Palmarés' })), h('div', { class: 'caja-cuerpo' }, h('table', null,
+    h('thead', null, h('tr', null, h('th', { text: '' }), h('th', { text: 'Jugador' }), h('th', { text: 'Torneos' }), h('th', { text: 'Grupos' }))),
+    h('tbody', null, palmares.map(function (x, i) { return h('tr', { class: soyYo(x.id) ? 'yo' : null }, h('td', { text: String(i + 1) }), h('td', { class: 'enlace', text: nick(x.id), onclick: function () { abrirFicha(x.id); } }), h('td', { text: String(x.t) }), h('td', { text: String(x.g) })); }))))));
+  poner(v, h('div', { class: 'rejilla', style: 'margin-bottom:14px' }, bloques));
+  var porJornada = {};
+  jornadas.forEach(function (x) { var k = x.titulo.split(' · ')[0]; (porJornada[k] = porJornada[k] || []).push(x); });
+  Object.keys(porJornada).forEach(function (k) {
+    var lista = porJornada[k].sort(function (a, b) { return +a.titulo.replace(/\D+/g, ' ').trim().split(' ').pop() - +b.titulo.replace(/\D+/g, ' ').trim().split(' ').pop(); });
+    poner(v, h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h2', { text: k }), h('span', { class: 'nota der', text: 'Cerrada el ' + fecha(lista[0].fecha) })),
+      h('div', { class: 'caja-cuerpo' }, lista.map(function (x) {
+        return h('div', { class: 'titulo' }, catChip(x.cat), h('div', { class: 'info' }, x.titulo.split(' · ')[1] + ': ', h('b', { text: nick(x.campeon) }), h('small', { text: 'Subcampeón: ' + nick(x.subcampeon) })));
+      }))));
+  });
+}
+
+/* ===================== CUENTA ===================== */
+function abrirEntrar() {
+  var hoja = document.getElementById('hoja'), modo = 'entrar', sel = null;
+  function pintarE() {
+    hoja.innerHTML = '';
+    poner(hoja, h('div', { class: 'seg' },
+      h('button', { class: modo === 'entrar' ? 'activo' : null, text: 'Ya tengo cuenta', onclick: function () { modo = 'entrar'; pintarE(); } }),
+      h('button', { class: modo === 'nueva' ? 'activo' : null, text: 'Es mi primera vez', onclick: function () { modo = 'nueva'; pintarE(); } })));
+    var err = h('div', { class: 'error-caja oculto' });
+    function fallo(m) { err.textContent = m; err.classList.remove('oculto'); b.disabled = false; }
+    var b;
+    if (modo === 'entrar') {
+      var nickI = h('input', { type: 'text', autocomplete: 'username', placeholder: 'Tu nick' });
+      var clave = h('input', { type: 'password', autocomplete: 'current-password', placeholder: 'Tu contraseña' });
+      b = h('button', { class: 'boton prim', text: 'Entrar', onclick: function () {
+        b.disabled = true;
+        llamar('entrar', [{ nick: nickI.value, clave: clave.value }], function (r) { S.token = r.token; guardarLS('token', r.token); cerrarModal(); toast('¡Hola!'); cargar(); }, fallo);
+      } });
+      clave.addEventListener('keydown', function (e) { if (e.key === 'Enter') b.click(); });
+      poner(hoja, [h('h3', { text: 'Entrar' }), err, h('div', { class: 'campo' }, h('label', { text: 'Nick' }), nickI), h('div', { class: 'campo' }, h('label', { text: 'Contraseña' }), clave),
+        h('p', { class: 'nota', text: '¿Has olvidado la contraseña? Pide a un profesor que la restablezca y vuelve a crear tu cuenta.' }),
+        h('div', { class: 'acciones' }, h('button', { class: 'boton sec', text: 'Cancelar', onclick: cerrarModal }), b)]);
+      setTimeout(function () { nickI.focus(); }, 50);
+    } else {
+      var buscar = h('input', { class: 'buscar', style: 'max-width:none;margin-bottom:8px', type: 'search', placeholder: 'Busca tu nombre…' });
+      var lista = h('div', { class: 'lista-elegir' });
+      function pintarLista() {
+        lista.innerHTML = '';
+        var q = norm(buscar.value);
+        var ls = S.d.sinCuenta.filter(function (j) { return !q || norm(j.nombre).indexOf(q) >= 0; });
+        if (!ls.length) poner(lista, h('div', { class: 'vacio', style: 'padding:14px', text: 'No aparece tu nombre: o ya tienes cuenta, o todavía no te han dado de alta.' }));
+        ls.forEach(function (j) { poner(lista, h('button', { class: sel === j.id ? 'sel' : null, text: j.nombre, onclick: function () { sel = j.id; pintarLista(); } })); });
+      }
+      buscar.oninput = pintarLista; pintarLista();
+      var nickN = h('input', { type: 'text', autocomplete: 'username', placeholder: 'Ej.: Gontxi', maxlength: '20' });
+      var c1 = h('input', { type: 'password', autocomplete: 'new-password', placeholder: 'Mínimo 6 caracteres' });
+      var c2 = h('input', { type: 'password', autocomplete: 'new-password', placeholder: 'Repite la contraseña' });
+      var tel = h('input', { type: 'tel', autocomplete: 'tel', placeholder: '600 000 000' });
+      var mail = h('input', { type: 'email', autocomplete: 'email', placeholder: 'nombre@correo.com' });
+      b = h('button', { class: 'boton prim', text: 'Crear mi cuenta', onclick: function () {
+        if (!sel) return fallo('Elige tu nombre en la lista.');
+        if (c1.value !== c2.value) return fallo('Las contraseñas no coinciden.');
+        b.disabled = true;
+        llamar('crearCuenta', [{ jugador: sel, nick: nickN.value, clave: c1.value, telefono: tel.value, correo: mail.value }],
+          function (r) { S.token = r.token; guardarLS('token', r.token); cerrarModal(); toast('Cuenta creada. ¡Bienvenido!'); cargar(); }, fallo);
+      } });
+      poner(hoja, [h('h3', { text: 'Crea tu cuenta' }), h('p', { class: 'nota', text: 'Solo la primera vez. Después entrarás siempre con tu nick y tu contraseña.' }), err,
+        h('div', { class: 'campo' }, h('label', { text: '¿Quién eres?' }), buscar, lista),
+        h('div', { class: 'campo' }, h('label', { text: 'Nick (es lo que verán los demás en el ranking)' }), nickN),
+        h('div', { class: 'campo' }, h('label', { text: 'Contraseña' }), c1, c2),
+        h('div', { class: 'campo' }, h('label', { text: 'Teléfono' }), tel, h('p', { class: 'nota', text: 'Lo verán los demás socios con cuenta, para quedar a jugar.' })),
+        h('div', { class: 'campo' }, h('label', { text: 'Correo (no se muestra)' }), mail),
+        h('div', { class: 'acciones' }, h('button', { class: 'boton sec', text: 'Cancelar', onclick: cerrarModal }), b)]);
+    }
+  }
+  pintarE(); abrirModal();
+}
+
+function abrirPerfil() {
+  var yo = S.d.yo, hoja = document.getElementById('hoja');
+  hoja.innerHTML = '';
+  var err = h('div', { class: 'error-caja oculto' });
+  function fallo(m) { err.textContent = m; err.classList.remove('oculto'); b.disabled = false; }
+  var nickI = h('input', { type: 'text', value: yo.nick, maxlength: '20' }), tel = h('input', { type: 'tel', value: yo.telefono || '' }), mail = h('input', { type: 'email', value: yo.correo || '' });
+  var b = h('button', { class: 'boton prim', text: 'Guardar cambios', onclick: function () {
+    b.disabled = true;
+    llamar('miPerfil', [S.token, { nick: nickI.value, telefono: tel.value, correo: mail.value }], function (d) { trasCambio(d, 'Datos guardados'); }, fallo);
+  } });
+  var a1 = h('input', { type: 'password', autocomplete: 'current-password', placeholder: 'Contraseña actual' }), a2 = h('input', { type: 'password', autocomplete: 'new-password', placeholder: 'Contraseña nueva' });
+  poner(hoja, [h('h3', { text: 'Mi cuenta' }), h('p', { class: 'nota', text: yo.nombre }), err,
+    h('div', { class: 'campo' }, h('label', { text: 'Nick' }), nickI),
+    h('div', { class: 'campo' }, h('label', { text: 'Teléfono (lo ven los socios con cuenta)' }), tel),
+    h('div', { class: 'campo' }, h('label', { text: 'Correo (no se muestra)' }), mail),
+    h('div', { class: 'acciones', style: 'margin-bottom:18px' }, b),
+    h('div', { class: 'sub', text: 'Cambiar contraseña' }), h('div', { class: 'campo' }, a1, a2),
+    h('div', { class: 'acciones', style: 'margin-bottom:18px' }, h('button', { class: 'boton sec', text: 'Cambiar contraseña', onclick: function (e) {
+      e.target.disabled = true;
+      llamar('cambiarClave', [S.token, a1.value, a2.value], function () { cerrarModal(); toast('Contraseña cambiada'); }, function (m) { e.target.disabled = false; fallo(m); });
+    } })),
+    h('div', { class: 'acciones' }, h('button', { class: 'boton texto rojo izq', text: 'Salir de mi cuenta', onclick: function () {
+      llamar('salir', [S.token], function () {});
+      S.token = null; guardarLS('token', null); cerrarModal(); toast('Has salido de tu cuenta'); cargar();
+    } }), h('button', { class: 'boton sec', text: 'Cerrar', onclick: cerrarModal }))]);
+  abrirModal();
+}
+
+/* ===================== PROFESORES ===================== */
+function vistaProfesores(v) {
+  var A = S.adm;
+  if (!A.token) {
+    var err = h('div', { class: 'error-caja oculto' }), input = h('input', { type: 'password', placeholder: 'Contraseña de profesores', autocomplete: 'current-password' });
+    var b = h('button', { class: 'boton prim', text: 'Entrar', onclick: function () {
+      b.disabled = true;
+      llamar('adminEntrar', [input.value], function (t) { A.token = t; guardarSS('adm', t); pintar(); }, function (m) { b.disabled = false; err.textContent = m; err.classList.remove('oculto'); });
+    } });
+    input.addEventListener('keydown', function (e) { if (e.key === 'Enter') b.click(); });
+    poner(v, [h('div', { class: 'intro' }, h('h1', { text: 'Profesores' }), h('p', { text: 'Jornadas, torneos, jugadores y corrección de resultados.' })),
+      h('div', { class: 'caja', style: 'max-width:440px' }, h('div', { class: 'caja-cuerpo' }, err, h('div', { class: 'campo' }, h('label', { text: 'Contraseña' }), input), b))]);
+    return setTimeout(function () { input.focus(); }, 50);
+  }
+  poner(v, h('div', { class: 'chips' }, [['jornada', 'Jornada'], ['torneos', 'Torneos'], ['jugadores', 'Jugadores'], ['resultados', 'Resultados']].map(function (x) {
+    return h('button', { class: 'chip' + (A.sub === x[0] ? ' activo' : ''), text: x[1], onclick: function () { A.sub = x[0]; pintar(); } });
+  }), h('button', { class: 'boton texto', style: 'margin-left:auto', text: 'Salir', onclick: function () { A.token = null; guardarSS('adm', null); pintar(); } })));
+  if (!A.jugadores) {
+    poner(v, h('div', { class: 'cargando' }));
+    return llamar('adminJugadores', [A.token], function (js) { A.jugadores = js; pintar(); });
+  }
+  ({ jornada: profJornada, torneos: profTorneos, jugadores: profJugadores, resultados: profResultados }[A.sub])(v);
+}
+function refrescarAdmin(msg) { S.adm.jugadores = null; S.adm.propuesta = null; if (msg) toast(msg); cerrarModal(); cargar(); }
+
+/* ---- jornada ---- */
+var ICONOS = { sube: '↑', baja: '↓', queda: '=', alta: '★', corrido: '↔', manual: '✋' };
+function tipoChip(j) { return j.manual ? 'manual' : j.origen === 'alta' ? 'alta' : j.corrido ? 'corrido' : j.origen; }
+function necesitaRevision(g) {
+  var P = S.adm.propuesta, c = (P.clasificaciones || []).filter(function (x) { return x.numero === g.numero; })[0];
+  var tam = (P.grupos.filter(function (x) { return x.numero === g.numero; })[0] || g).jugadores.length;
+  return (c && (c.pendientes || c.empates.length)) || g.jugadores.length !== tam || g.jugadores.some(function (j) { return j.manual || j.corrido; });
+}
+function profJornada(v) {
+  var A = S.adm, J = S.d.jornada;
+  if (!A.propuesta) {
+    poner(v, h('div', { class: 'intro' }, h('h1', { text: J ? 'Jornada ' + J.numero + ' en juego' : 'Empezar la temporada' }),
+      h('p', { text: J ? 'Del ' + fecha(J.inicio) + ' al ' + fecha(J.fin) + '. Al cerrarla se reparten los puntos según la clasificación de cada grupo, se apuntan los campeones en el histórico y se forman los grupos de la siguiente.'
+                     : 'Se formarán los grupos de la primera jornada con el orden actual de los jugadores. Podrás moverlos antes de publicar.' })));
+    if (J) {
+      var pend = J.grupos.reduce(function (s, g) { return s + g.partidos.filter(function (p) { return !p.texto; }).length; }, 0);
+      poner(v, h('p', { class: 'nota', text: pend ? 'Quedan ' + pend + ' partidos sin resultado. Los que no se jueguen no cuentan.' : 'Todos los partidos tienen resultado.' }));
+    }
+    return poner(v, h('button', { class: 'boton prim', text: J ? 'Preparar el cierre de la jornada' : 'Preparar la primera jornada', onclick: function (e) {
+      e.target.disabled = true; e.target.textContent = 'Calculando…';
+      llamar('adminPropuestaJornada', [A.token], function (p) {
+        A.propuesta = p; A.revisados = {};
+        A.estado = p.grupos.map(function (g) { return { numero: g.numero, cat: g.cat, jugadores: g.jugadores.map(function (j) { return { id: j.id, origen: j.origen, desde: j.desde, corrido: !!j.corrido }; }) }; });
+        A.fechas = { inicio: p.hoy, fin: p.finPropuesto };
+        pintar();
+      }, function (m) { e.target.disabled = false; toast(m); });
+    } }));
+  }
+  var P = A.propuesta, pendientes = A.estado.filter(function (g) { return necesitaRevision(g) && !A.revisados[g.numero]; }).length;
+  poner(v, h('div', { class: 'intro' }, h('h1', { text: P.primera ? 'Primera jornada' : 'Cierre de la jornada ' + P.jornada.numero }),
+    h('p', { text: P.primera ? 'Revisa los grupos y publica.' : 'A la izquierda, los puntos que se van a repartir. Abajo, los grupos de la próxima jornada: mueve a quien quieras con "Mover a".' })));
+  if ((P.altas || []).length || (P.bajas || []).length) poner(v, h('div', { class: 'info-caja' }, (P.altas.length ? 'Entran: ' + P.altas.map(nick).join(', ') + '. ' : '') + (P.bajas.length ? 'Salen: ' + P.bajas.map(nick).join(', ') + '.' : '')));
+  var rej = h('div', { class: 'rejilla' });
+  poner(v, rej);
+  A.estado.forEach(function (g) {
+    var rev = necesitaRevision(g) && !A.revisados[g.numero];
+    var c = (P.clasificaciones || []).filter(function (x) { return x.numero === g.numero; })[0];
+    var cuerpo = [];
+    if (c) {
+      var avisos = [];
+      if (c.pendientes) avisos.push(c.pendientes + ' partido' + (c.pendientes > 1 ? 's' : '') + ' sin jugar');
+      c.empates.forEach(function (e) { avisos.push('Empate total entre ' + e.map(nick).join(' y ') + ': decide el orden la posición inicial'); });
+      if (avisos.length) cuerpo.push(h('ul', { class: 'avisos' }, avisos.map(function (a) { return h('li', { text: a }); })));
+      cuerpo.push(h('div', { class: 'sub', style: 'margin-top:0', text: 'Jornada que termina' }));
+      cuerpo.push(h('table', null, h('thead', null, h('tr', null, ['#', 'Jugador', 'V', 'Sets', 'Puntos'].map(function (t) { return h('th', { text: t }); }))),
+        h('tbody', null, c.tabla.map(function (x) { return h('tr', null, h('td', { text: String(x.puesto) }), h('td', { text: nick(x.id) }), h('td', { text: String(x.victorias) }), h('td', { text: x.setsG + '-' + x.setsP }), h('td', { class: 'pts', text: '+' + miles(x.puntos) })); }))));
+    }
+    cuerpo.push(h('div', { class: 'sub', text: 'Grupo ' + g.numero + ' en la nueva jornada' }));
+    g.jugadores.forEach(function (j, idx) {
+      var tipo = tipoChip(j);
+      cuerpo.push(h('div', { class: 'jug' }, h('span', { class: 'ic ' + tipo, text: ICONOS[tipo] }),
+        h('div', { class: 'nom' }, nick(j.id), h('small', { text: j.origen === 'alta' ? 'alta nueva' : j.desde ? { sube: 'sube del G', baja: 'baja del G', queda: 'sigue del G' }[j.origen] + j.desde + (j.manual ? ' (movido a mano)' : '') : '' })),
+        h('label', { class: 'nota', style: 'display:flex;gap:5px;align-items:center' }, 'Mover a', h('select', { class: 'mover', value: String(g.numero), onchange: function (e) {
+          var dest = A.estado.filter(function (x) { return x.numero === +e.target.value; })[0], jug = g.jugadores.splice(idx, 1)[0];
+          jug.manual = true; dest.jugadores.push(jug); delete A.revisados[g.numero]; delete A.revisados[dest.numero];
+          toast(nick(jug.id) + ' → grupo ' + dest.numero); pintar();
+        } }, A.estado.map(function (x) { return h('option', { value: String(x.numero), text: 'G' + x.numero + ' (' + x.cat + ')' }); })))));
+    });
+    rej.appendChild(h('div', { class: 'caja' + (rev ? ' revisar' : '') },
+      h('div', { class: 'caja-cab' }, h('h3', { text: 'Grupo ' + g.numero }), catChip(g.cat), h('span', { class: 'etiqueta ' + (rev ? 'ambar' : ''), text: rev ? 'Revisar' : 'Correcto' }),
+        rev ? h('button', { class: 'boton peq sec der', text: 'Revisado', onclick: function () { A.revisados[g.numero] = true; pintar(); } }) : null),
+      h('div', { class: 'caja-cuerpo' }, cuerpo)));
+  });
+  var ini = h('input', { type: 'date', value: A.fechas.inicio, onchange: function (e) { A.fechas.inicio = e.target.value; } });
+  var fin = h('input', { type: 'date', value: A.fechas.fin, onchange: function (e) { A.fechas.fin = e.target.value; } });
+  poner(v, h('div', { class: 'caja', style: 'margin-top:14px;max-width:520px' }, h('div', { class: 'caja-cuerpo' }, h('div', { class: 'sub', style: 'margin-top:0', text: 'Fechas de la nueva jornada' }),
+    h('div', { class: 'fila-botones' }, h('div', { class: 'campo' }, h('label', { text: 'Empieza' }), ini), h('div', { class: 'campo' }, h('label', { text: 'Termina' }), fin)))));
+  poner(v, h('div', { class: 'barra-fija' }, h('div', { class: 'in' },
+    h('button', { class: 'boton sec', text: 'Descartar', onclick: function () { A.propuesta = null; pintar(); } }),
+    h('div', { class: 'txt', text: pendientes ? pendientes + ' grupos sin revisar' : 'Listo para publicar' }),
+    h('button', { class: 'boton prim', text: 'Publicar jornada', onclick: function () {
+      var vacios = A.estado.filter(function (g) { return !g.jugadores.length; });
+      if (vacios.length) return toast('El grupo ' + vacios[0].numero + ' está vacío.');
+      confirmar('¿Publicar la nueva jornada?', (P.primera ? '' : 'Se reparten los puntos de la jornada ' + P.jornada.numero + ' y se apuntan los campeones. ') + 'Se crean ' + A.estado.length + ' grupos con sus partidos.' + (pendientes ? ' Ojo: quedan ' + pendientes + ' grupos sin revisar.' : ''), 'Publicar', false, function (finC) {
+        llamar('adminPublicarJornada', [A.token, A.estado.map(function (g) { return { numero: g.numero, cat: g.cat, jugadores: g.jugadores.map(function (j) { return j.id; }) }; }), A.fechas],
+          function (r) { S.vista = 'jornada'; guardarLS('vista', 'jornada'); refrescarAdmin('Jornada ' + r.numero + ' publicada: ' + r.grupos + ' grupos, ' + r.jugadores + ' jugadores'); }, finC);
+      });
+    } }))));
+}
+
+/* ---- torneos ---- */
+function profTorneos(v) {
+  var A = S.adm;
+  var nombre = h('input', { type: 'text', placeholder: 'Ej.: Open de Primavera' }), tipo = h('select', null, h('option', { value: 'Grand Slam', text: 'Grand Slam (inscripción libre)' }), h('option', { value: 'Máster', text: 'Máster (8 mejores del ranking)' }));
+  var cierre = h('input', { type: 'date' });
+  poner(v, h('div', { class: 'caja', style: 'max-width:560px' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Nuevo torneo' })), h('div', { class: 'caja-cuerpo' },
+    h('div', { class: 'campo' }, h('label', { text: 'Nombre' }), nombre), h('div', { class: 'campo' }, h('label', { text: 'Tipo' }), tipo),
+    h('div', { class: 'campo' }, h('label', { text: 'Fin de la inscripción (opcional, solo informativo)' }), cierre),
+    h('p', { class: 'nota', text: 'El Máster se crea con los 8 primeros del ranking de hoy y su cuadro queda sorteado al momento.' }),
+    h('button', { class: 'boton prim', text: 'Crear torneo', onclick: function (e) {
+      e.target.disabled = true;
+      llamar('adminCrearTorneo', [A.token, { nombre: nombre.value, tipo: tipo.value, cierreInscripcion: cierre.value }], function () { refrescarAdmin('Torneo creado'); }, function (m) { e.target.disabled = false; toast(m); });
+    } }))));
+  S.d.torneos.forEach(function (t) {
+    var caja = cajaTorneo(t, true), acc = h('div', { class: 'caja-cuerpo', style: 'border-top:1px solid var(--linea)' });
+    if (t.estado === 'Inscripción') {
+      var sel = h('select', { class: 'mover' }, h('option', { value: '', text: 'Apuntar a un jugador…' }),
+        S.adm.jugadores.filter(function (j) { return j.estado !== 'Baja' && t.inscritos.indexOf(j.id) < 0; }).map(function (j) { return h('option', { value: j.id, text: j.nombre + (j.nick ? ' (' + j.nick + ')' : '') }); }));
+      poner(acc, h('div', { class: 'fila-botones' }, sel,
+        h('button', { class: 'boton peq sec', text: 'Apuntar', onclick: function () { if (sel.value) llamar('adminInscribir', [A.token, t.id, sel.value, false], function () { toast('Apuntado'); cargar(); }); } }),
+        t.inscritos.length ? h('select', { class: 'mover', onchange: function (e) { if (e.target.value) llamar('adminInscribir', [A.token, t.id, e.target.value, true], function () { toast('Quitado'); cargar(); }); } },
+          h('option', { value: '', text: 'Quitar a un inscrito…' }), t.inscritos.map(function (id) { return h('option', { value: id, text: nick(id) }); })) : null,
+        h('button', { class: 'boton peq prim der', text: 'Cerrar inscripción y sortear', disabled: t.inscritos.length < 2, onclick: function () {
+          confirmar('¿Sortear el cuadro?', t.inscritos.length + ' inscritos. Los mejores del ranking serán cabezas de serie y el resto se coloca por sorteo. Después no se puede apuntar nadie más.', 'Sortear', false, function (fin) {
+            llamar('adminSortearTorneo', [A.token, t.id], function () { refrescarAdmin('Cuadro sorteado'); }, fin);
+          });
+        } })));
+    }
+    if (t.estado !== 'Finalizado') poner(acc, h('div', { class: 'fila-botones', style: 'margin-top:8px' }, h('button', { class: 'boton peq texto rojo', text: 'Borrar torneo', onclick: function () {
+      confirmar('¿Borrar ' + t.nombre + '?', 'Se borran el torneo, sus inscritos y sus partidos.', 'Borrar', true, function (fin) { llamar('adminBorrarTorneo', [A.token, t.id], function () { refrescarAdmin('Torneo borrado'); }, fin); });
+    } })));
+    else poner(acc, h('p', { class: 'nota', style: 'margin:0', text: 'Si un resultado está mal, corrígelo en el cuadro: los puntos y el campeón se recalculan solos.' }));
+    caja.appendChild(acc);
+    poner(v, caja);
+  });
+}
+
+/* ---- jugadores ---- */
+function profJugadores(v) {
+  var A = S.adm;
+  var input = h('input', { class: 'buscar', type: 'search', placeholder: 'Buscar jugador…', value: A.buscar, oninput: function (e) { A.buscar = e.target.value; lista(); } });
+  poner(v, h('div', { class: 'chips' }, h('button', { class: 'boton prim peq', text: 'Dar de alta', onclick: abrirAlta }), input,
+    h('label', { class: 'nota', style: 'display:flex;gap:6px;align-items:center' }, h('input', { type: 'checkbox', checked: A.verBajas, onchange: function (e) { A.verBajas = e.target.checked; lista(); } }), 'Ver bajas')));
+  var cont = h('div', { class: 'caja' });
+  poner(v, cont);
+  function lista() {
+    cont.innerHTML = '';
+    var q = norm(A.buscar);
+    var js = A.jugadores.filter(function (j) { return (A.verBajas || j.estado !== 'Baja') && (!q || norm(j.nombre + ' ' + j.nick).indexOf(q) >= 0); });
+    var sinPagar = A.jugadores.filter(function (j) { return j.estado !== 'Baja' && !j.pagado; }).length, sinCuenta = A.jugadores.filter(function (j) { return j.estado !== 'Baja' && !j.cuenta; }).length;
+    poner(cont, h('div', { class: 'caja-cab' }, h('span', { class: 'etiqueta gris', text: A.jugadores.filter(function (j) { return j.estado !== 'Baja'; }).length + ' jugadores' }),
+      sinPagar ? h('span', { class: 'etiqueta ambar', text: sinPagar + ' sin pagar' }) : null, sinCuenta ? h('span', { class: 'etiqueta azul', text: sinCuenta + ' sin cuenta en la web' }) : null));
+    poner(cont, h('div', { class: 'caja-cuerpo' }, js.map(function (j) {
+      var estado = j.estado === 'Activo' ? null : h('span', { class: 'etiqueta ' + (j.estado === 'Alta pendiente' ? 'azul' : j.estado === 'Baja' ? 'gris' : 'rojo'), text: j.estado });
+      var pago = h('button', { class: 'pago' + (j.pagado ? ' si' : ''), text: j.pagado ? 'Pagado' : 'No pagado', onclick: function () {
+        pago.disabled = true; llamar('adminPagado', [A.token, j.id, !j.pagado], function () { j.pagado = !j.pagado; pintar(); });
+      } });
+      return h('div', { class: 'jug' }, h('div', { class: 'nom' }, j.nombre + (j.nick ? ' · ' + j.nick : ''),
+        h('small', { text: [j.grupo ? 'Grupo ' + j.grupo + ' (' + j.cat + ')' : '', j.telefono, j.cuenta ? 'con cuenta' : 'sin cuenta'].filter(Boolean).join(' · ') })),
+        estado, pago, h('button', { class: 'boton peq texto', text: 'Editar', onclick: function () { abrirEditar(j); } }));
+    })));
+  }
+  lista();
+}
+
+function abrirAlta() {
+  var hoja = document.getElementById('hoja'), pagado = false;
+  hoja.innerHTML = '';
+  var nombre = h('input', { type: 'text', placeholder: 'Nombre y apellidos' }), tel = h('input', { type: 'tel' }), mail = h('input', { type: 'email' });
+  var cats = S.d.reglas.piramide.map(function (n) { return n.cat; });
+  var cat = h('select', { value: String(cats[cats.length - 1]) }, cats.map(function (c) { return h('option', { value: String(c), text: 'Categoría ' + c }); }));
+  var seg = h('div', { class: 'seg' });
+  function pintarSeg() { seg.innerHTML = ''; poner(seg, [h('button', { class: pagado ? 'activo' : null, text: 'Sí', onclick: function () { pagado = true; pintarSeg(); } }), h('button', { class: !pagado ? 'activo' : null, text: 'No', onclick: function () { pagado = false; pintarSeg(); } })]); }
+  pintarSeg();
+  var b = h('button', { class: 'boton prim', text: 'Dar de alta', onclick: function () {
+    b.disabled = true;
+    llamar('adminAlta', [S.adm.token, { nombre: nombre.value, cat: cat.value, telefono: tel.value, correo: mail.value, pagado: pagado }], function (m) { refrescarAdmin(m); }, function (m) { b.disabled = false; toast(m); });
+  } });
+  poner(hoja, [h('h3', { text: 'Dar de alta' }), h('p', { class: 'nota', text: 'Entra en la próxima jornada, en la categoría que elijas. Desde ya puede crear su cuenta, retar y apuntarse a torneos.' }),
+    h('div', { class: 'campo' }, h('label', { text: 'Nombre y apellidos' }), nombre), h('div', { class: 'campo' }, h('label', { text: 'Categoría en la que entra' }), cat),
+    h('div', { class: 'campo' }, h('label', { text: '¿Ha pagado?' }), seg), h('div', { class: 'campo' }, h('label', { text: 'Teléfono (opcional)' }), tel),
+    h('div', { class: 'campo' }, h('label', { text: 'Correo (opcional)' }), mail), h('div', { class: 'acciones' }, h('button', { class: 'boton sec', text: 'Cancelar', onclick: cerrarModal }), b)]);
+  abrirModal();
+}
+
+function abrirEditar(j) {
+  var A = S.adm, hoja = document.getElementById('hoja');
+  hoja.innerHTML = '';
+  var nombre = h('input', { type: 'text', value: j.nombre }), nk = h('input', { type: 'text', value: j.nick || '' }), tel = h('input', { type: 'tel', value: j.telefono || '' }), mail = h('input', { type: 'email', value: j.correo || '' });
+  var b = h('button', { class: 'boton prim', text: 'Guardar', onclick: function () {
+    b.disabled = true;
+    llamar('adminEditar', [A.token, j.id, { nombre: nombre.value, nick: nk.value, telefono: tel.value, correo: mail.value }], function () { refrescarAdmin('Guardado'); }, function (m) { b.disabled = false; toast(m); });
+  } });
+  var extra = [];
+  if (j.cuenta) extra.push(h('button', { class: 'boton peq sec', text: 'Restablecer contraseña', onclick: function () {
+    confirmar('¿Restablecer la contraseña de ' + j.nombre + '?', 'Su cuenta se queda sin contraseña y tendrá que crearla otra vez con "Es mi primera vez".', 'Restablecer', false, function (fin) {
+      llamar('adminResetClave', [A.token, j.id], function (m) { refrescarAdmin(m); }, fin);
+    });
+  } }));
+  if (j.estado === 'Activo' || j.estado === 'Alta pendiente') extra.push(h('button', { class: 'boton peq texto rojo', text: 'Dar de baja', onclick: function () {
+    confirmar('¿Dar de baja a ' + j.nombre + '?', j.estado === 'Alta pendiente' ? 'Todavía no había entrado: se cancela su alta.' : 'Saldrá del ranking al cerrar la jornada. Su historial se conserva.', 'Dar de baja', true, function (fin) {
+      llamar('adminBaja', [A.token, j.id], function (m) { refrescarAdmin(m); }, fin);
+    });
+  } }));
+  if (j.estado === 'Baja pendiente') extra.push(h('button', { class: 'boton peq sec', text: 'Anular la baja', onclick: function () { llamar('adminCancelarBaja', [A.token, j.id], function () { refrescarAdmin('Baja anulada'); }); } }));
+  poner(hoja, [h('h3', { text: j.nombre }), h('p', { class: 'nota', text: j.estado + (j.grupo ? ' · grupo ' + j.grupo : '') + (j.cuenta ? ' · con cuenta' : ' · sin cuenta') }),
+    h('div', { class: 'campo' }, h('label', { text: 'Nombre' }), nombre), h('div', { class: 'campo' }, h('label', { text: 'Nick' }), nk),
+    h('div', { class: 'campo' }, h('label', { text: 'Teléfono' }), tel), h('div', { class: 'campo' }, h('label', { text: 'Correo' }), mail),
+    h('div', { class: 'fila-botones', style: 'margin-bottom:14px' }, extra),
+    h('div', { class: 'acciones' }, h('button', { class: 'boton sec', text: 'Cancelar', onclick: cerrarModal }), b)]);
+  abrirModal();
+}
+
+/* ---- resultados ---- */
+function profResultados(v) {
+  var A = S.adm, d = S.d;
+  poner(v, h('div', { class: 'fila-botones', style: 'margin-bottom:14px' }, h('button', { class: 'boton bola peq', text: 'Apuntar un reto ya jugado', onclick: abrirRetoProfesor })));
+  var bloques = [];
+  if (d.jornada) d.jornada.grupos.forEach(function (g) {
+    bloques.push(h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h3', { text: 'Grupo ' + g.numero }), h('span', { class: 'der' }, catChip(g.cat))),
+      h('div', { class: 'caja-cuerpo' }, g.partidos.map(function (p) { return filaPartido(p, { admin: true }); }))));
+  });
+  var retos = d.retos.filter(function (r) { return r.estado === 'jugado'; }).slice(0, 30);
+  if (retos.length) bloques.push(h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h3', { text: 'Últimos retos' })), h('div', { class: 'caja-cuerpo' }, retos.map(function (r) {
+    var f = filaPartido(r, { admin: true });
+    f.appendChild(h('button', { class: 'boton peq texto rojo', text: 'Anular', onclick: function () {
+      confirmar('¿Anular el reto?', 'Se borra el reto y sus puntos.', 'Anular', true, function (fin) { llamar('adminBorrarReto', [A.token, r.id], function () { refrescarAdmin('Reto anulado'); }, fin); });
+    } }));
+    return f;
+  }))));
+  poner(v, h('p', { class: 'nota', text: 'Los partidos de torneo se corrigen en su cuadro (pestaña Torneos).' }));
+  poner(v, h('div', { class: 'rejilla' }, bloques));
+}
+
+function abrirRetoProfesor() {
+  var hoja = document.getElementById('hoja'), A = S.adm;
+  hoja.innerHTML = '';
+  var activos = A.jugadores.filter(function (j) { return j.estado !== 'Baja'; });
+  function sel() { return h('select', { class: 'mover', style: 'width:100%;padding:9px' }, h('option', { value: '', text: 'Elige…' }), activos.map(function (j) { return h('option', { value: j.id, text: j.nombre }); })); }
+  var a = sel(), b = sel();
+  poner(hoja, [h('h3', { text: 'Apuntar un reto' }), h('p', { class: 'nota', text: 'Para socios sin cuenta en la web. El ganador suma ' + S.d.reglas.puntosReto + ' puntos.' }),
+    h('div', { class: 'campo' }, h('label', { text: 'Jugador 1' }), a), h('div', { class: 'campo' }, h('label', { text: 'Jugador 2' }), b),
+    h('div', { class: 'acciones' }, h('button', { class: 'boton sec', text: 'Cancelar', onclick: cerrarModal }), h('button', { class: 'boton prim', text: 'Siguiente: resultado', onclick: function () {
+      if (!a.value || !b.value || a.value === b.value) return toast('Elige a dos jugadores distintos.');
+      var p = { id: null, tipo: 'Reto', a: a.value, b: b.value, texto: '', ganador: '' };
+      abrirResultado(p, true);
+      M.guardarNuevo = true;
+    } }))]);
+  abrirModal();
+}
+// El formulario de resultado, para un reto nuevo del profesor, llama a adminRegistrarReto
+var _llamarOriginal = llamar;
+llamar = function (accion, args, ok, fallo) {
+  if (accion === 'adminGuardarResultado' && M && M.guardarNuevo) return _llamarOriginal('adminRegistrarReto', [args[0], M.p.a, M.p.b, args[2]], ok, fallo);
+  return _llamarOriginal(accion, args, ok, fallo);
+};
+
+/* ===================== ventanas ===================== */
+function abrirModal() { document.getElementById('modal').classList.remove('oculto'); }
+function cerrarModal() { document.getElementById('modal').classList.add('oculto'); M = null; }
+document.getElementById('modal').addEventListener('click', function (e) { if (e.target.id === 'modal') cerrarModal(); });
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cerrarModal(); });
+function confirmar(titulo, texto, boton, peligro, accion) {
+  var hoja = document.getElementById('hoja');
+  hoja.innerHTML = '';
+  var b = h('button', { class: 'boton ' + (peligro ? 'peligro' : 'prim'), text: boton, onclick: function () {
+    b.disabled = true; b.textContent = 'Un momento…';
+    accion(function (m) { b.disabled = false; b.textContent = boton; toast(m); });
+  } });
+  poner(hoja, [h('h3', { text: titulo }), h('p', { class: 'nota', text: texto }), h('div', { class: 'acciones' }, h('button', { class: 'boton sec', text: 'Volver', onclick: cerrarModal }), b)]);
+  abrirModal();
+}
+
+/* ===================== arranque ===================== */
+pintar();
+cargar();
+</script>
+</body>
+</html>
