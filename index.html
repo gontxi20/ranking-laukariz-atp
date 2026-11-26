@@ -238,6 +238,10 @@
   .det-cab h2 { font-family: var(--num); font-size: 28px; line-height: 1.05; }
   .det-cab small { opacity: .85; }
   .det-cab .etiqueta { position: absolute; top: 14px; right: 14px; }
+  .logo { display: block; object-fit: contain; object-position: left center; }
+  .logo-tt { height: 34px; max-width: 80%; margin-bottom: 4px; }
+  .tt-gris .logo-tt { filter: grayscale(1); opacity: .55; }
+  .logo-det { height: 46px; max-width: 60%; margin-bottom: 6px; background: rgba(255,255,255,.92); border-radius: 8px; padding: 4px 8px; }
   .rk { display: inline-block; min-width: 26px; margin-right: 6px; font-family: var(--num); font-size: 13px; font-weight: 600; color: var(--suave); text-align: right; }
   .ronda > h4 small { display: block; font-weight: 500; color: var(--ambar); }
   .campeon { background: var(--c1, var(--pista)); }
@@ -793,6 +797,12 @@ function confirmarBorrar(p, admin) {
 // Colores de cada torneo (los de su imagen): principal y secundario.
 var ESTILOS = { ao: ['#0a6ebd', '#1d3a8a'], rg: ['#c8562a', '#0b5a3c'], wim: ['#4b1d6e', '#00693c'], uso: ['#0b2a5c', '#f5c400'], master: ['#14213d', '#c9a227'] };
 function colores(t) { return ESTILOS[t.estilo] || ['#1f4d3a', '#d9ec5b']; }
+// Logos: archivos logos/ao.png, logos/rg.png, logos/wim.png, logos/uso.png y logos/master.png junto a index.html.
+// Si un logo no existe todavía, simplemente no se muestra.
+function logo(t, clase) {
+  if (!ESTILOS[t.estilo]) return null;
+  return h('img', { class: 'logo ' + (clase || ''), src: 'logos/' + t.estilo + '.png', alt: '', onerror: function (e) { e.target.remove(); } });
+}
 function varsColor(t) { var c = colores(t); return '--c1:' + c[0] + ';--c2:' + c[1]; }
 function nombreT(t) { return t.nombre + (t.anio && String(t.nombre).indexOf(t.anio) < 0 ? ' ' + t.anio : ''); }
 /** El torneo que más interesa ahora: inscripción abierta, en juego, el próximo programado o el último terminado. */
@@ -816,7 +826,7 @@ function porAnio(lista) {
 function vistaTorneos(v) {
   var d = S.d, P = d.reglas.puntosTorneo;
   poner(v, h('div', { class: 'intro' }, h('h1', { text: 'Torneos' }),
-    h('p', { text: 'Cuatro Grand Slam al año y el Máster de los 8 mejores. Puntos: campeón ' + miles(P.W) + ', finalista ' + miles(P.F) +
+    h('p', { text: 'Cuatro Grand Slam al año y el Máster, que juegan los 8 inscritos con mejor clasificación. Puntos: campeón ' + miles(P.W) + ', finalista ' + miles(P.F) +
       ', semifinales ' + P.SF + ', cuartos ' + P.QF + ', octavos ' + P.R16 + '. Pulsa en un torneo para ver su cuadro.' })));
   if (!d.torneos.length) return poner(v, h('div', { class: 'caja' }, h('div', { class: 'vacio', text: 'Los profesores todavía no han programado la temporada de torneos.' })));
   var dest = torneoDestacado(d.torneos);
@@ -840,7 +850,7 @@ function tarjetaTorneo(t, activa, onclick) {
     : t.estado === 'En juego' ? (RONDA[nombreRonda(rondaActual(t), t.rondas)] || 'Ronda ' + rondaActual(t)) + (t.plazos[rondaActual(t)] ? ' · hasta el ' + fecha(t.plazos[rondaActual(t)]) : '')
     : '🏆 ' + nick(t.campeon);
   return h('button', { class: 'tt tt-' + clase + (activa ? ' activa' : ''), style: varsColor(t), 'aria-pressed': activa ? 'true' : 'false', onclick: onclick },
-    h('span', { class: 'badge', text: badge }), h('b', { text: t.nombre }), h('small', { text: linea }));
+    h('span', { class: 'badge', text: badge }), logo(t, 'logo-tt'), h('b', { text: t.nombre }), h('small', { text: linea }));
 }
 
 function detalleTorneo(t, admin) {
@@ -850,10 +860,10 @@ function detalleTorneo(t, admin) {
   var dentro = h('div', { class: 'caja-cuerpo' });
   if (t.estado === 'Programado') {
     poner(dentro, h('p', { style: 'margin:0', text: (t.prevista ? 'Previsto: ' + t.prevista + '. ' : '') +
-      (t.tipo === 'Máster' ? 'Lo juegan los 8 primeros de la clasificación en ese momento, sin inscripción.' : 'Cuando se abra la inscripción se pondrá en azul y podrás apuntarte.') }));
+      (t.tipo === 'Máster' ? 'Cuando se abra la inscripción podrás apuntarte; lo juegan los 8 inscritos con mejor clasificación.' : 'Cuando se abra la inscripción se pondrá en azul y podrás apuntarte.') }));
   } else if (t.estado === 'Inscripción') {
     poner(dentro, h('p', { class: 'nota', style: 'margin-top:0', text: (t.cierreInscripcion ? 'Inscripción hasta el ' + fecha(t.cierreInscripcion) + '. ' : '') +
-      'Los mejores de la clasificación serán cabezas de serie; el resto se coloca por sorteo.' }));
+      (t.tipo === 'Máster' ? 'Entran los 8 inscritos con mejor clasificación: 1º contra 8º, 4º contra 5º…' : 'Los mejores de la clasificación serán cabezas de serie; el resto se coloca por sorteo.') }));
     poner(dentro, h('div', { class: 'sub', text: t.inscritos.length + ' inscritos' }));
     poner(dentro, h('p', { style: 'margin:0 0 10px' }, t.inscritos.map(nick).join(', ') || 'Nadie todavía.'));
     if (yo) poner(dentro, h('button', { class: 'boton ' + (apuntado ? 'sec' : 'bola'), text: apuntado ? 'Desapuntarme' : 'Apuntarme', onclick: function (e) {
@@ -867,7 +877,7 @@ function detalleTorneo(t, admin) {
     poner(dentro, cuadroTorneo(t, admin));
   }
   return h('div', { class: 'caja', style: varsColor(t) },
-    h('div', { class: 'det-cab ' + cab }, h('h2', { text: nombreT(t) }), h('small', { text: t.tipo === 'Máster' ? 'Máster · los 8 mejores' : 'Grand Slam' + (t.tam ? ' · cuadro de ' + t.tam : '') }),
+    h('div', { class: 'det-cab ' + cab }, logo(t, 'logo-det'), h('h2', { text: nombreT(t) }), h('small', { text: t.tipo === 'Máster' ? 'Máster · los 8 mejores inscritos' : 'Grand Slam' + (t.tam ? ' · cuadro de ' + t.tam : '') }),
       h('span', { class: 'etiqueta ' + etiqueta[1], text: etiqueta[0] })),
     dentro);
 }
@@ -1149,7 +1159,7 @@ function profTorneos(v) {
     b.torneos.forEach(function (t) { poner(v, cajaAdminTorneo(t)); });
   });
   var nombre = h('input', { type: 'text', placeholder: 'Ej.: Torneo de Navidad' });
-  var tipo = h('select', null, h('option', { value: 'Grand Slam', text: 'Con inscripción' }), h('option', { value: 'Máster', text: 'Máster (8 mejores)' }));
+  var tipo = h('select', null, h('option', { value: 'Grand Slam', text: 'Con inscripción' }), h('option', { value: 'Máster', text: 'Tipo Máster (8 mejores inscritos)' }));
   poner(v, h('details', { class: 'caja', style: 'max-width:620px;margin-top:22px' }, h('summary', { class: 'caja-cab', style: 'cursor:pointer' }, h('h3', { text: 'Torneo extra (fuera del calendario)' })),
     h('div', { class: 'caja-cuerpo' }, h('div', { class: 'campo' }, h('label', { text: 'Nombre' }), nombre), h('div', { class: 'campo' }, h('label', { text: 'Tipo' }), tipo),
       h('button', { class: 'boton sec peq', text: 'Crear (queda programado)', onclick: function (e) {
@@ -1168,12 +1178,7 @@ function cajaAdminTorneo(t) {
     confirmar('¿Borrar ' + nombreT(t) + '?', 'Se borran el torneo, sus inscritos y sus partidos.', 'Borrar', true, function (fin) { llamar('adminBorrarTorneo', [S.token, t.id], hecho('Torneo borrado'), fin); });
   }) : null;
   if (t.estado === 'Programado') {
-    if (t.tipo === 'Máster') filas.push(h('div', { class: 'fila-botones' }, boton('Sortear con los 8 mejores', 'prim', function () {
-      confirmar('¿Sortear el ' + nombreT(t) + '?', 'Entran los 8 primeros de la clasificación de hoy, con 1º contra 8º, 4º contra 5º… Se pone en juego al momento.', 'Sortear', false, function (fin) {
-        llamar('adminSortearTorneo', [S.token, t.id], hecho('Máster sorteado: ya está en juego'), fin);
-      });
-    }), editar, borrar));
-    else {
+    {
       var cierre = h('input', { type: 'date', class: 'mover' });
       filas.push(h('div', { class: 'fila-botones' }, h('label', { class: 'nota', style: 'display:flex;gap:6px;align-items:center' }, 'Inscripción hasta', cierre),
         boton('Abrir inscripción', 'prim', function (e) { e.target.disabled = true; llamar('adminAbrirInscripcion', [S.token, t.id, cierre.value, false], hecho('Inscripción abierta: ya sale en azul'), function (m) { e.target.disabled = false; toast(m); }); }),
@@ -1186,9 +1191,13 @@ function cajaAdminTorneo(t) {
       boton('Apuntar', 'sec', function () { if (sel.value) llamar('adminInscribir', [S.token, t.id, sel.value, false], function () { toast('Apuntado'); cargar(); }); }),
       t.inscritos.length ? h('select', { class: 'mover', onchange: function (e) { if (e.target.value) llamar('adminInscribir', [S.token, t.id, e.target.value, true], function () { toast('Quitado'); cargar(); }); } },
         h('option', { value: '', text: 'Quitar a un inscrito…' }), t.inscritos.map(function (id) { return h('option', { value: id, text: nick(id) }); })) : null));
+    var esMaster = t.tipo === 'Máster';
     filas.push(h('div', { class: 'fila-botones' },
-      h('button', { class: 'boton peq prim', text: 'Cerrar inscripción y sortear', disabled: t.inscritos.length < 2, onclick: function () {
-        confirmar('¿Sortear el cuadro?', t.inscritos.length + ' inscritos. Los mejores de la clasificación serán cabezas de serie y el resto se coloca por sorteo. Después no se puede apuntar nadie más.', 'Sortear', false, function (fin) {
+      h('button', { class: 'boton peq prim', text: esMaster ? 'Cerrar inscripción y sortear (8 mejores)' : 'Cerrar inscripción y sortear', disabled: t.inscritos.length < 2, onclick: function () {
+        var fuera = esMaster && t.inscritos.length > 8 ? t.inscritos.length - 8 : 0;
+        confirmar('¿Sortear el cuadro?', esMaster
+          ? t.inscritos.length + ' inscritos. Entran los 8 con mejor clasificación de hoy (1º contra 8º, 4º contra 5º…)' + (fuera ? ' y se quedan fuera ' + fuera + '.' : '.') + ' Después no se puede apuntar nadie más.'
+          : t.inscritos.length + ' inscritos. Los mejores de la clasificación serán cabezas de serie y el resto se coloca por sorteo. Después no se puede apuntar nadie más.', 'Sortear', false, function (fin) {
           llamar('adminSortearTorneo', [S.token, t.id], hecho('Cuadro sorteado: ya está en juego'), fin);
         });
       } }),
@@ -1232,7 +1241,7 @@ function abrirEditarTorneo(t) {
   poner(hoja, [h('h3', { text: nombreT(t) }), h('p', { class: 'nota', text: 'Año ' + t.anio + ' · ' + t.estado }),
     h('div', { class: 'campo' }, h('label', { text: 'Nombre' }), nombre),
     h('div', { class: 'campo' }, h('label', { text: 'Fecha prevista (texto libre)' }), prev),
-    t.tipo !== 'Máster' ? h('div', { class: 'campo' }, h('label', { text: 'Fin de la inscripción' }), cierre) : null,
+    h('div', { class: 'campo' }, h('label', { text: 'Fin de la inscripción' }), cierre),
     h('div', { class: 'acciones' }, h('button', { class: 'boton sec', text: 'Cancelar', onclick: cerrarModal }), b)]);
   abrirModal();
 }
