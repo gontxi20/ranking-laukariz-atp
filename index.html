@@ -184,6 +184,7 @@
   .l-sube { background: #e5f5ea; color: #1f7a45; } .l-baja { background: #fdeceb; color: #b3261e; } .l-oro { background: #fbf2d3; color: #8a6a00; }
   td.enlace { cursor: pointer; }
   td.pts { font-family: var(--num); font-weight: 700; font-size: 16px; }
+  td.pg { font-family: var(--num); font-weight: 700; font-size: 17px; color: var(--pista); }
   .partido { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #edf0f6; }
   .partido:last-child { border-bottom: 0; }
   .partido .info { flex: 1; min-width: 0; }
@@ -903,13 +904,13 @@ function vistaJornada(v) {
 function cajaGrupo(g, esMio) {
   var d = S.d;
   var tabla = h('table', null,
-    h('thead', null, h('tr', null, ['#', 'Jugador', 'PJ', 'V', 'Sets', 'Juegos', 'Ptos'].map(function (c) { return h('th', { text: c }); }))),
+    h('thead', null, h('tr', null, [['#'], ['Jugador'], ['PJ', 'Partidos jugados'], ['Pts', 'Puntos del grupo: 3 por victoria, 1 por perder ganando un set'], ['V', 'Victorias'], ['Sets'], ['Juegos'], ['Ranking', 'Puntos de ranking que se llevaría si la jornada acabara hoy']].map(function (c) { return h('th', { text: c[0], title: c[1] || null }); }))),
     h('tbody', null, g.tabla.map(function (x) {
       var oro = g.numero === 1 && x.puesto === 1;
       var clase = [oro ? 'oro' : x.mov === 'sube' ? 'sube' : x.mov === 'baja' ? 'baja' : '', soyYo(x.id) ? 'yo' : ''].join(' ').trim() || null;
       return h('tr', { class: clase, title: oro ? 'Líder del grupo 1' : x.mov === 'sube' ? 'Subiría de grupo' : x.mov === 'baja' ? 'Bajaría de grupo' : null },
         h('td', { text: oro ? '👑' : String(x.puesto) }), h('td', { class: 'enlace', text: nick(x.id), onclick: function () { abrirFicha(x.id); } }),
-        h('td', { text: String(x.jugados) }), h('td', { text: String(x.victorias) }),
+        h('td', { text: String(x.jugados) }), h('td', { class: 'pg', text: String(x.pg || 0) }), h('td', { text: String(x.victorias) }),
         h('td', { text: x.setsG + '-' + x.setsP }), h('td', { text: x.juegosG + '-' + x.juegosP }), h('td', { class: 'pts', text: miles(x.puntos) }));
     })));
   var otros = esMio && d.yo ? g.partidos.filter(function (p) { return p.a !== d.yo.id && p.b !== d.yo.id; }) : g.partidos;
@@ -920,7 +921,7 @@ function cajaGrupo(g, esMio) {
     h('div', { class: 'caja-cuerpo' }, tabla,
       h('div', { class: 'leyenda' }, g.numero === 1 ? h('span', { class: 'l-oro', text: '👑 Líder' }) : h('span', { class: 'l-sube', text: 'Sube' }),
         g.tabla.some(function (x) { return x.mov === 'baja'; }) ? h('span', { class: 'l-baja', text: 'Baja' }) : null,
-        h('span', { text: 'Si la jornada acabara hoy. Ptos: lo que se llevaría cada uno.' })),
+        h('span', { text: 'Pts: 3 por victoria y 1 por perder ganando un set. Ranking: lo que se llevaría cada uno si la jornada acabara hoy.' })),
       h('p', { class: 'nota', style: 'margin:6px 0 0' }, 'En cada partido, el primero es el local y pone las bolas.'),
       otros.length ? h('details', { class: 'desplegable' },
         h('summary', null, (esMio ? 'Resto de partidos' : 'Ver los partidos') + ' (' + jugados + ' de ' + otros.length + ' jugados)'),
@@ -1404,8 +1405,8 @@ function profJornada(v) {
       c.empates.forEach(function (e) { avisos.push('Empate total entre ' + e.map(nick).join(' y ') + ': decide el orden la posición inicial'); });
       if (avisos.length) cuerpo.push(h('ul', { class: 'avisos' }, avisos.map(function (a) { return h('li', { text: a }); })));
       cuerpo.push(h('div', { class: 'sub', style: 'margin-top:0', text: 'Jornada que termina' }));
-      cuerpo.push(h('table', null, h('thead', null, h('tr', null, ['#', 'Jugador', 'V', 'Sets', 'Puntos'].map(function (t) { return h('th', { text: t }); }))),
-        h('tbody', null, c.tabla.map(function (x) { return h('tr', null, h('td', { text: String(x.puesto) }), h('td', { text: nick(x.id) }), h('td', { text: String(x.victorias) }), h('td', { text: x.setsG + '-' + x.setsP }), h('td', { class: 'pts', text: '+' + miles(x.puntos) })); }))));
+      cuerpo.push(h('table', null, h('thead', null, h('tr', null, ['#', 'Jugador', 'Pts', 'V', 'Sets', 'Ranking'].map(function (t) { return h('th', { text: t }); }))),
+        h('tbody', null, c.tabla.map(function (x) { return h('tr', null, h('td', { text: String(x.puesto) }), h('td', { text: nick(x.id) }), h('td', { class: 'pg', text: String(x.pg || 0) }), h('td', { text: String(x.victorias) }), h('td', { text: x.setsG + '-' + x.setsP }), h('td', { class: 'pts', text: '+' + miles(x.puntos) })); }))));
     }
     cuerpo.push(h('div', { class: 'sub', text: etiquetas(A.estado)[g.numero].codigo + ' en la nueva jornada' }));
     g.jugadores.forEach(function (j, idx) {
