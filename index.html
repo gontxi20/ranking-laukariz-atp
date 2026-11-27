@@ -277,6 +277,7 @@
   .logo { display: block; object-fit: contain; object-position: left center; }
   .logo-tt { height: 46px; max-width: 100%; margin-bottom: 6px; }
   .tt-gris .logo-tt { filter: grayscale(1); opacity: .55; }
+  .tt-azul .logo-tt { background: #fff; border-radius: 8px; padding: 4px 6px; }
   .logo-det { height: 72px; max-width: 70%; margin-bottom: 8px; background: rgba(255,255,255,.94); border-radius: 10px; padding: 6px 10px; }
   .rk { display: inline-block; min-width: 26px; margin-right: 6px; font-family: var(--num); font-size: 13px; font-weight: 600; color: var(--suave); text-align: right; }
   .ronda > h4 small { display: block; font-weight: 500; color: var(--ambar); }
@@ -348,6 +349,54 @@
   .datos-ficha div { background: var(--fondo); border-radius: 10px; padding: 8px 10px; }
   .datos-ficha b { font-family: var(--num); font-size: 22px; display: block; line-height: 1.1; }
   .datos-ficha small { color: var(--suave); font-size: 12.5px; }
+  /* ---------- perfil ---------- */
+  .hoja.ancha { max-width: 680px; padding-top: 0; }
+  .perfil-cab { --n1: var(--pista); position: relative; display: flex; align-items: center; gap: 16px; margin: 0 -18px 0; padding: 22px 18px 18px; background: var(--pista); color: #fff; border-bottom: 5px solid var(--n1); }
+  .perfil-cab.nivel-1000 { --n1: #c9a227; } .perfil-cab.nivel-500 { --n1: #2f6fe0; } .perfil-cab.nivel-250 { --n1: #7a4fc0; } .perfil-cab.nivel-100 { --n1: #8a94a6; }
+  .perfil-pos { text-align: center; min-width: 74px; }
+  .perfil-pos small { display: block; font-size: 11.5px; color: #b8c2ea; font-weight: 600; }
+  .perfil-pos b { font-family: var(--num); font-size: 48px; line-height: 1; color: var(--bola); }
+  .perfil-nom { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .perfil-nom > b { font-family: var(--num); font-size: 32px; line-height: 1.05; }
+  .perfil-nom > span { color: #c8d0f0; font-size: 14px; }
+  .perfil-grupo { display: inline-flex; align-items: center; gap: 8px; margin-top: 6px; color: #fff !important; font-weight: 600; }
+  .perfil-grupo .codigo { background: var(--n1); font-size: 15px; min-width: 30px; padding: 3px 6px; }
+  .cerrar-x { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 50%; border: 0; background: rgba(255,255,255,.12); color: #fff; font-size: 22px; line-height: 1; cursor: pointer; }
+  .perfil-contacto { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 14px 0; }
+  .perfil-contacto a { text-decoration: none; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+  .kpis div { background: var(--fondo); border-radius: 12px; padding: 10px 10px 8px; }
+  .kpis b { display: block; font-family: var(--num); font-size: 26px; line-height: 1.05; color: var(--pista); }
+  .kpis small { color: var(--suave); font-size: 12px; }
+  @media (max-width: 480px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+  .bloque-nivel { border: 1px solid var(--linea); border-radius: 12px; padding: 12px 14px 8px; margin-bottom: 12px; }
+  .fila-nivel { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 12px; }
+  .grafica { width: 100%; height: 70px; display: block; margin-top: 6px; }
+  .grafica .area { fill: var(--pista-claro); } .grafica .linea { fill: none; stroke: var(--pista-2); stroke-width: 2.5; stroke-linejoin: round; vector-effect: non-scaling-stroke; } .grafica .punto { fill: var(--bola); stroke: var(--pista); stroke-width: 2; }
+  .nivel { display: inline-flex; align-items: baseline; gap: 2px; white-space: nowrap; }
+  .nivel b { font-family: var(--num); font-size: 22px; color: var(--pista); }
+  .nivel small { color: var(--suave); font-size: 12px; margin-right: 8px; }
+  .nivel .barra { display: inline-block; width: 90px; height: 7px; border-radius: 4px; background: var(--linea); overflow: hidden; align-self: center; }
+  .nivel .barra span { display: block; height: 100%; background: linear-gradient(90deg, #7a4fc0, #2f6fe0 50%, #c9a227); }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 12px; margin-bottom: 4px; }
+  .stats div { border-bottom: 1px solid #edf0f6; padding-bottom: 6px; }
+  .stats small { display: block; font-size: 12px; color: var(--suave); }
+  .stats b { font-family: var(--num); font-size: 20px; }
+  .racha { display: inline-flex; gap: 3px; margin-top: 2px; }
+  .racha i, .resultado { font-style: normal; display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; font-size: 12px; font-weight: 800; flex: none; }
+  .racha i.g, .resultado.g { background: #e5f5ea; color: #1f7a45; }
+  .racha i.p, .resultado.p { background: #fdeceb; color: #b3261e; }
+  .resultado.pend, .resultado.wo { background: var(--fondo); color: var(--suave); }
+  .enlace-j { border: 0; background: none; padding: 0; font: inherit; color: inherit; cursor: pointer; text-decoration: underline; text-decoration-color: rgba(0,22,122,.25); text-underline-offset: 3px; }
+  .enlace-j:hover { color: var(--pista-2); text-decoration-color: currentColor; }
+  .campeon .enlace-j { color: #fff; text-decoration-color: rgba(255,255,255,.4); }
+  .tabla-nivel tr { cursor: pointer; }
+  .tabla-nivel tbody tr:hover td { background: #f8f9fc; }
+  .tabla-nivel td, .tabla-nivel th { padding: 10px 14px; }
+  .tabla-nivel td:first-child { width: 48px; }
+  .tabla-nivel .pos-n { font-family: var(--num); font-size: 20px; font-weight: 700; color: var(--pista); }
+  .tabla-nivel th:nth-child(3), .tabla-nivel td:nth-child(3) { text-align: left; }
+  .tabla-nivel td:last-child { width: 1%; }
   .toast { position: fixed; left: 50%; top: 14px; transform: translateX(-50%) translateY(-16px); background: var(--tinta); color: #fff; padding: 11px 16px; border-radius: 12px; font-size: 14.5px; opacity: 0; visibility: hidden; transition: transform .25s, opacity .25s, visibility .25s; z-index: 30; max-width: 90vw; }
   .toast.ver { transform: translateX(-50%) translateY(0); opacity: 1; visibility: visible; }
   .oculto { display: none !important; }
@@ -572,6 +621,7 @@ function vistaMenu(v) {
   var d = S.d, yo = d.yo, J = d.jornada;
   var rk = yo ? d.ranking.filter(function (r) { return r.id === yo.id; })[0] : null;
   poner(v, h('div', { class: 'saludo' }, h('h1', { text: yo ? 'Hola, ' + yo.nick : 'Hola, profesores' }),
+    yo ? h('button', { class: 'boton sec peq', style: 'margin:2px 0 8px', text: 'Ver mi perfil', onclick: function () { abrirFicha(yo.id); } }) : null,
     h('p', { text: rk ? 'Vas ' + rk.pos + 'º en la clasificación con ' + miles(rk.puntos) + ' puntos.' : yo ? 'Todavía no tienes puntos: juega tu grupo, un torneo o un reto.' : 'Veis todo lo de los socios y además la sección Admin.' })));
 
   var infoJ = [];
@@ -613,22 +663,44 @@ function vistaMenu(v) {
 
 /* ===================== RANKING ===================== */
 function vistaRanking(v) {
-  var d = S.d;
+  var d = S.d, modo = S.clasif || 'puntos';
   poner(v, h('div', { class: 'cabecera-ranking' },
-    h('div', { class: 'intro', style: 'margin:0' }, h('h1', { text: 'Clasificación' }),
-      h('p', { text: 'Suma de los puntos de los últimos 12 meses: jornadas, torneos y retos. Actualizado el ' + fecha(d.hoy) + '.' })),
+    h('div', { class: 'intro', style: 'margin:0' }, h('h1', { text: modo === 'nivel' ? 'Clasificación por nivel' : 'Clasificación' }),
+      h('p', { text: modo === 'nivel'
+        ? 'Nivel de 0 a 10. Sube al ganar (más cuanto mejor es el rival y más alta la categoría) y baja al perder (más si el rival tenía bastante menos nivel).'
+        : 'Suma de los puntos de los últimos 12 meses: jornadas, torneos y retos. Actualizado el ' + fecha(d.hoy) + '.' })),
     h('input', { class: 'buscar', type: 'search', placeholder: 'Buscar jugador…', value: S.buscar, oninput: function (e) { S.buscar = e.target.value; lista(); } })));
+  poner(v, h('div', { class: 'seg', style: 'max-width:460px' },
+    h('button', { class: modo === 'puntos' ? 'activo' : null, text: 'Por puntos', onclick: function () { S.clasif = 'puntos'; pintar(); } }),
+    h('button', { class: modo === 'nivel' ? 'activo' : null, text: 'Clasificación por nivel', onclick: function () { S.clasif = 'nivel'; pintar(); } })));
   var cont = h('div', { class: 'caja' });
   poner(v, cont);
-  if (d.yo) {
+  if (modo === 'puntos' && d.yo) {
     var mio = d.ranking.filter(function (r) { return r.id === d.yo.id; })[0];
     if (mio && mio.caducan) poner(v, h('p', { class: 'nota', text: 'En el próximo mes caducan ' + miles(mio.caducan) + ' de tus puntos: defiéndelos jugando.' }));
   }
-  poner(v, h('p', { class: 'nota', text: 'La flecha compara tu puesto con el de hace un mes. Pulsa en un jugador para ver su ficha.' }));
+  poner(v, h('p', { class: 'nota', text: modo === 'nivel'
+    ? 'Ganados / jugados cuenta los partidos de jornada, torneos y retos que se jugaron (los no jugados no cuentan). Pulsa en un jugador para ver su ficha.'
+    : 'La flecha compara tu puesto con el de hace un mes. Pulsa en un jugador para ver su ficha.' }));
+  function coincide(id) { var j = jugador(id), q = norm(S.buscar); return !q || norm(j.nick).indexOf(q) >= 0 || norm(j.nombre).indexOf(q) >= 0; }
   function lista() {
     cont.innerHTML = '';
-    var q = norm(S.buscar);
-    var filas = d.ranking.filter(function (r) { var j = jugador(r.id); return !q || norm(j.nick).indexOf(q) >= 0 || norm(j.nombre).indexOf(q) >= 0; });
+    if (modo === 'nivel') {
+      var orden = d.niveles.slice().sort(function (a, b) { return b.nivel - a.nivel || b.ganados - a.ganados; });
+      var filasN = orden.map(function (n, i) { return { n: n, pos: i + 1 }; }).filter(function (x) { return coincide(x.n.id); });
+      if (!filasN.length) return poner(cont, h('div', { class: 'vacio', text: 'Nadie coincide con la búsqueda.' }));
+      return poner(cont, h('table', { class: 'tabla-nivel' },
+        h('thead', null, h('tr', null, h('th', { text: 'Nº' }), h('th', { text: 'Jugador' }), h('th', { text: 'Ganados / jugados' }), h('th', { text: 'Nivel' }))),
+        h('tbody', null, filasN.map(function (x) {
+          var n = x.n, pct = n.jugados ? Math.round(100 * n.ganados / n.jugados) : 0;
+          return h('tr', { class: soyYo(n.id) ? 'yo' : null, onclick: function () { abrirFicha(n.id); } },
+            h('td', { class: 'pos-n', text: String(x.pos) }),
+            h('td', null, h('b', { text: nick(n.id) })),
+            h('td', null, n.ganados + '/' + n.jugados, h('span', { class: 'nota', text: n.jugados ? ' (' + pct + ' %)' : '' })),
+            h('td', null, barraNivel(n.nivel)));
+        }))));
+    }
+    var filas = d.ranking.filter(function (r) { return coincide(r.id); });
     if (!filas.length) return poner(cont, h('div', { class: 'vacio', text: 'Nadie coincide con la búsqueda.' }));
     poner(cont, h('ol', { class: 'ranking' }, filas.map(function (r) {
       var j = jugador(r.id), mov = r.antes ? r.antes - r.pos : 0;
@@ -643,43 +715,147 @@ function vistaRanking(v) {
   lista();
 }
 
+function nivelDe(id) { return (S.d.niveles || []).filter(function (n) { return n.id === id; })[0] || null; }
+function txtNivel(x) { return (Math.round(x * 10) / 10).toFixed(1).replace('.', ','); }
+function barraNivel(nivel) {
+  return h('span', { class: 'nivel' }, h('b', { text: txtNivel(nivel) }), h('small', { text: '/10' }),
+    h('span', { class: 'barra' }, h('span', { style: 'width:' + Math.max(0, Math.min(100, nivel * 10)) + '%' })));
+}
+
 /* ===================== FICHA ===================== */
+/** Todos los partidos que conoce la web, sin repetir. */
+function todosLosPartidos() {
+  var d = S.d, vistos = {}, out = [];
+  [].concat(d.jornada ? [].concat.apply([], d.jornada.grupos.map(function (g) { return g.partidos; })) : [], d.partidosAnteriores || [], d.retos || [],
+    [].concat.apply([], d.torneos.map(function (t) { return t.partidos.map(function (p) { p._torneo = t; return p; }); })))
+    .forEach(function (p) { if (!vistos[p.id]) { vistos[p.id] = true; out.push(p); } });
+  return out;
+}
+/** Sets y juegos del partido desde el punto de vista de id. */
+function marcadorDe(p, id) {
+  var r = { sg: 0, sp: 0, jg: 0, jp: 0 };
+  if (!p.texto || p.texto === 'W.O.') return r;
+  var t = p.texto.replace(/\(\d+\)/g, ''), stb = t.match(/\((\d+)-(\d+)\)/);
+  if (stb) t = t.replace(stb[0], '');
+  var yoA = p.a === id;
+  (t.match(/\d+-\d+/g) || []).forEach(function (x) {
+    var n = x.split('-').map(Number), m = yoA ? n[0] : n[1], o = yoA ? n[1] : n[0];
+    r.jg += m; r.jp += o; if (m > o) r.sg++; else r.sp++;
+  });
+  if (stb) { var a = +stb[1], b = +stb[2], m2 = yoA ? a : b, o2 = yoA ? b : a; if (m2 > o2) r.sg++; else r.sp++; }
+  return r;
+}
+function estadisticas(id) {
+  var ps = todosLosPartidos().filter(function (p) { return p.texto && (p.a === id || p.b === id); })
+    .sort(function (a, b) { return (b.fecha || '') < (a.fecha || '') ? -1 : (b.fecha || '') > (a.fecha || '') ? 1 : 0; });
+  var e = { partidos: ps, jugados: 0, ganados: 0, sg: 0, sp: 0, jg: 0, jp: 0, racha: [], tipo: { Grupo: [0, 0], Torneo: [0, 0], Reto: [0, 0] } };
+  ps.forEach(function (p) {
+    if (p.texto === 'W.O.') return;
+    var gana = (p.ganador === 'A' ? p.a : p.b) === id, m = marcadorDe(p, id);
+    e.jugados++; if (gana) e.ganados++;
+    e.sg += m.sg; e.sp += m.sp; e.jg += m.jg; e.jp += m.jp;
+    if (e.racha.length < 6) e.racha.push(gana);
+    if (e.tipo[p.tipo]) e.tipo[p.tipo][gana ? 0 : 1]++;
+  });
+  return e;
+}
+function pendientesDe(id) {
+  var d = S.d, out = [];
+  if (d.jornada) d.jornada.grupos.forEach(function (g) { g.partidos.forEach(function (p) { if (!p.texto && (p.a === id || p.b === id)) out.push({ p: p, donde: 'Jornada · ' + nombreGrupo(g.numero), plazo: d.jornada.fin }); }); });
+  d.torneos.forEach(function (t) {
+    if (t.estado !== 'En juego') return;
+    t.partidos.forEach(function (p) { if (!p.texto && p.a && p.b && (p.a === id || p.b === id)) out.push({ p: p, donde: nombreT(t) + ' · ' + (RONDA[nombreRonda(p.ronda, t.rondas)] || ''), plazo: t.plazos[p.ronda] }); });
+  });
+  (d.retos || []).forEach(function (p) { if (p.estado === 'aceptado' && (p.a === id || p.b === id)) out.push({ p: p, donde: 'Reto', plazo: null }); });
+  return out;
+}
+/** Gráfica pequeña de la evolución del nivel. */
+function graficaNivel(serie) {
+  if (serie.length < 2) return null;
+  var W = 300, H = 70, min = Math.min.apply(null, serie), max = Math.max.apply(null, serie);
+  if (max - min < 1) { var mid = (max + min) / 2; min = mid - 0.5; max = mid + 0.5; }
+  var pts = serie.map(function (v, i) { return [6 + i * (W - 12) / (serie.length - 1), H - 8 - (v - min) / (max - min) * (H - 16)]; });
+  var ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H); svg.setAttribute('preserveAspectRatio', 'none'); svg.setAttribute('class', 'grafica'); svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-label', 'Evolución del nivel: de ' + txtNivel(serie[0]) + ' a ' + txtNivel(serie[serie.length - 1]));
+  var area = document.createElementNS(ns, 'path');
+  area.setAttribute('d', 'M' + pts[0][0] + ',' + (H - 4) + ' L' + pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' L') + ' L' + pts[pts.length - 1][0] + ',' + (H - 4) + ' Z');
+  area.setAttribute('class', 'area'); svg.appendChild(area);
+  var linea = document.createElementNS(ns, 'polyline');
+  linea.setAttribute('points', pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ')); linea.setAttribute('class', 'linea'); svg.appendChild(linea);
+  return svg;
+}
+function telefonoLimpio(t) { var n = String(t || '').replace(/[^\d+]/g, ''); if (/^\d{9}$/.test(n)) n = '34' + n; return n.replace('+', ''); }
+
 function abrirFicha(id) {
-  var d = S.d, j = jugador(id), r = d.ranking.filter(function (x) { return x.id === id; })[0] || {};
-  var hoja = document.getElementById('hoja');
-  hoja.innerHTML = '';
+  var d = S.d, j = jugador(id);
+  if (!j) return;
+  var r = d.ranking.filter(function (x) { return x.id === id; })[0] || {}, nv = nivelDe(id);
+  var e = estadisticas(id), pend = pendientesDe(id);
   var titulos = d.historico.filter(function (x) { return x.campeon === id || x.subcampeon === id; });
   var vigentes = d.puntos.filter(function (p) { return p.jugador === id && p.fecha <= d.hoy && p.caduca > d.hoy; }).sort(function (a, b) { return a.caduca < b.caduca ? -1 : 1; });
-  var partidos = [].concat(d.jornada ? [].concat.apply([], d.jornada.grupos.map(function (g) { return g.partidos; })) : [], d.retos, d.partidosAnteriores,
-    [].concat.apply([], d.torneos.map(function (t) { return t.partidos; })))
-    .filter(function (p) { return p.texto && (p.a === id || p.b === id); })
-    .sort(function (a, b) { return (b.fecha || '') < (a.fecha || '') ? -1 : 1; }).slice(0, 8);
-  var victorias = partidos.filter(function (p) { return (p.ganador === 'A' ? p.a : p.b) === id; }).length;
+  var ordenNivel = d.niveles.slice().sort(function (a, b) { return b.nivel - a.nivel || b.ganados - a.ganados; }).map(function (x) { return x.id; });
+  var pct = e.jugados ? Math.round(100 * e.ganados / e.jugados) : null;
+  var hoja = limpiarHoja();
+  hoja.innerHTML = ''; hoja.classList.add('ancha');
+  function fila(p, opciones) {
+    var gana = p.texto && (p.ganador === 'A' ? p.a : p.b) === id, rival = p.a === id ? p.b : p.a;
+    return h('div', { class: 'partido' }, h('span', { class: 'resultado ' + (!p.texto ? 'pend' : p.texto === 'W.O.' ? 'wo' : gana ? 'g' : 'p'), text: !p.texto ? '·' : gana ? 'G' : 'P' }),
+      h('div', { class: 'info' }, h('div', { class: 'vs' }, (p.texto ? (gana ? 'Gana a ' : 'Pierde con ') : 'Contra '), enlace(rival)),
+        h('div', { class: 'res', text: (opciones && opciones.donde) || ((p.tipo === 'Reto' ? 'Reto' : p.tipo === 'Torneo' ? (p._torneo ? nombreT(p._torneo) : 'Torneo') : 'Jornada') +
+          (p.texto ? ' · ' + (p.texto === 'W.O.' ? 'no jugado' : (p.a === id ? p.texto : p.texto.replace(/(\d+)-(\d+)/g, '$2-$1'))) : '') + (p.fecha && p.texto ? ' · ' + fecha(p.fecha) : '')) })));
+  }
+  var tel = j.telefono ? telefonoLimpio(j.telefono) : '';
+  var g = j.grupo ? rotulo(j.grupo) : null;
   poner(hoja, [
-    h('div', { class: 'ficha-cab' }, h('span', { class: 'pos', text: r.pos ? String(r.pos) : '–' }),
-      h('div', null, h('b', { text: j.nick }), j.nick !== j.nombre ? h('span', { class: 'nota', text: j.nombre }) : null)),
-    h('div', { class: 'datos-ficha' },
+    h('div', { class: 'perfil-cab' + (j.cat ? ' nivel-' + j.cat : '') },
+      h('div', { class: 'perfil-pos' }, h('small', { text: 'Ranking' }), h('b', { text: r.pos ? String(r.pos) + 'º' : '–' })),
+      h('div', { class: 'perfil-nom' }, h('b', { text: j.nick }), h('span', { text: j.nombre }),
+        g ? h('span', { class: 'perfil-grupo' }, h('span', { class: 'codigo', text: g.codigo }), g.nombre) : null),
+      h('button', { class: 'cerrar-x', 'aria-label': 'Cerrar', text: '×', onclick: cerrarModal })),
+    h('div', { class: 'perfil-contacto' },
+      j.telefono ? [h('a', { class: 'boton sec peq', href: 'tel:' + j.telefono.replace(/\s/g, ''), text: 'Llamar · ' + j.telefono }),
+                    h('a', { class: 'boton sec peq', href: 'https://wa.me/' + tel, target: '_blank', rel: 'noopener', text: 'WhatsApp' })]
+                 : h('span', { class: 'nota', text: 'No ha puesto teléfono.' }),
+      d.yo && !soyYo(id) ? h('button', { class: 'boton bola peq', text: 'Retar', onclick: function () { confirmarReto(id); } }) : null),
+    h('div', { class: 'kpis' },
       h('div', null, h('b', { text: miles(r.puntos || 0) }), h('small', { text: 'puntos' })),
-      h('div', null, h('b', { text: j.grupo ? rotulo(j.grupo).codigo : '–' }), h('small', { text: j.grupo ? rotulo(j.grupo).nombre : 'Sin grupo' })),
+      h('div', null, h('b', { text: nv ? txtNivel(nv.nivel) : '–' }), h('small', { text: 'nivel · ' + (ordenNivel.indexOf(id) + 1) + 'º' })),
+      h('div', null, h('b', { text: pct === null ? '–' : pct + '%' }), h('small', { text: e.ganados + ' de ' + e.jugados + ' ganados' })),
       h('div', null, h('b', { text: String(titulos.filter(function (t) { return t.campeon === id; }).length) }), h('small', { text: 'títulos' }))),
-    j.telefono ? h('p', null, 'Teléfono: ', h('a', { href: 'tel:' + j.telefono.replace(/\s/g, ''), text: j.telefono })) : h('p', { class: 'nota', text: 'No ha puesto teléfono.' }),
-    d.yo && !soyYo(id) ? h('div', { class: 'fila-botones', style: 'margin-bottom:10px' }, h('button', { class: 'boton bola peq', text: 'Retar a ' + j.nick, onclick: function () { confirmarReto(id); } })) : null,
+    nv ? h('div', { class: 'bloque-nivel' },
+      h('div', { class: 'fila-nivel' }, barraNivel(nv.nivel), h('span', { class: 'nota', text: nv.historial.length ? 'Empezó en ' + txtNivel(nv.inicial) + ' · ' + (nv.nivel >= nv.inicial ? '+' : '') + txtNivel(nv.nivel - nv.inicial) : 'Nivel inicial, aún sin partidos' })),
+      graficaNivel([nv.inicial].concat(nv.historial))) : null,
+    e.jugados ? h('div', { class: 'stats' },
+      h('div', null, h('small', { text: 'Últimos partidos' }), h('span', { class: 'racha' }, e.racha.slice().reverse().map(function (gana) { return h('i', { class: gana ? 'g' : 'p', text: gana ? 'G' : 'P' }); }))),
+      h('div', null, h('small', { text: 'Sets' }), h('b', { text: e.sg + '-' + e.sp })),
+      h('div', null, h('small', { text: 'Juegos' }), h('b', { text: e.jg + '-' + e.jp })),
+      h('div', null, h('small', { text: 'Jornada' }), h('b', { text: e.tipo.Grupo[0] + '-' + e.tipo.Grupo[1] })),
+      h('div', null, h('small', { text: 'Torneos' }), h('b', { text: e.tipo.Torneo[0] + '-' + e.tipo.Torneo[1] })),
+      h('div', null, h('small', { text: 'Retos' }), h('b', { text: e.tipo.Reto[0] + '-' + e.tipo.Reto[1] }))) : null,
+    h('div', { class: 'sub', text: 'Partidos pendientes (' + pend.length + ')' }),
+    pend.length ? pend.map(function (x) { return fila(x.p, { donde: x.donde + (x.plazo ? ' · hasta el ' + fecha(x.plazo) : '') }); }) : h('p', { class: 'nota', style: 'margin:0', text: 'Ninguno.' }),
     titulos.length ? h('div', { class: 'sub', text: 'Palmarés' }) : null,
     titulos.map(function (t) { return h('div', { class: 'titulo' }, h('span', { class: 'copa', text: t.campeon === id ? '🏆' : '🥈' }),
       h('div', { class: 'info' }, t.titulo, h('small', { text: (t.campeon === id ? 'Campeón' : 'Subcampeón') + ' · ' + fecha(t.fecha) }))); }),
-    h('div', { class: 'sub', text: 'Puntos que cuentan ahora' }),
-    vigentes.length ? h('table', null, h('tbody', null, vigentes.map(function (p) {
-      return h('tr', null, h('td', { text: '' }), h('td', null, p.concepto, h('div', { class: 'nota', text: 'Caducan el ' + fecha(p.caduca) })), h('td', { class: 'pts', text: miles(p.puntos) }));
-    }))) : h('p', { class: 'nota', text: 'Todavía no tiene puntos.' }),
-    partidos.length ? h('div', { class: 'sub', text: 'Últimos partidos (' + victorias + ' ganados de ' + partidos.length + ')' }) : null,
-    partidos.map(function (p) {
-      var gana = (p.ganador === 'A' ? p.a : p.b) === id, rival = p.a === id ? p.b : p.a;
-      return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs', text: (gana ? 'Gana a ' : 'Pierde con ') + nick(rival) }),
-        h('div', { class: 'res', text: (p.tipo === 'Reto' ? 'Reto' : p.tipo === 'Torneo' ? 'Torneo' : 'Jornada') + ' · ' + (p.texto === 'W.O.' ? 'no jugado' : p.texto) + (p.fecha ? ' · ' + fecha(p.fecha) : '') })));
-    }),
-    h('div', { class: 'acciones', style: 'margin-top:12px' }, h('button', { class: 'boton sec', text: 'Cerrar', onclick: cerrarModal }))
+    h('div', { class: 'sub', text: 'Partidos jugados (' + e.partidos.length + ')' }),
+    e.partidos.length ? [e.partidos.slice(0, 6).map(function (p) { return fila(p); }),
+      e.partidos.length > 6 ? h('details', { class: 'desplegable' }, h('summary', { text: 'Ver los ' + (e.partidos.length - 6) + ' anteriores' }), e.partidos.slice(6).map(function (p) { return fila(p); })) : null]
+      : h('p', { class: 'nota', style: 'margin:0', text: 'Todavía no ha jugado ningún partido.' }),
+    h('details', { class: 'desplegable' }, h('summary', { text: 'Puntos que cuentan ahora (' + miles(r.puntos || 0) + ')' }),
+      vigentes.length ? h('table', null, h('tbody', null, vigentes.map(function (p) {
+        return h('tr', null, h('td', { text: '' }), h('td', null, p.concepto, h('div', { class: 'nota', text: 'Caducan el ' + fecha(p.caduca) })), h('td', { class: 'pts', text: miles(p.puntos) }));
+      }))) : h('p', { class: 'nota', text: 'Todavía no tiene puntos.' })),
+    h('div', { class: 'acciones', style: 'margin-top:14px' }, h('button', { class: 'boton sec', text: 'Cerrar', onclick: cerrarModal }))
   ]);
   abrirModal();
+  hoja.scrollTop = 0;
+}
+
+/** Nombre de un jugador que abre su ficha al pulsarlo. */
+function enlace(id, texto) {
+  if (!id) return h('span', { text: texto || '—' });
+  return h('button', { class: 'enlace-j', type: 'button', text: texto || nick(id), onclick: function (e) { e.stopPropagation(); abrirFicha(id); } });
 }
 
 /* ===================== JORNADA ===================== */
@@ -744,7 +920,7 @@ function cajaGrupo(g, esMio) {
 
 function filaPartido(p, op) {
   var d = S.d, yo = d.yo ? d.yo.id : null;
-  var titulo = op.mio ? 'Contra ' + nick(p.a === yo ? p.b : p.a) + (p.tipo === 'Grupo' ? (p.a === yo ? ' · local (pones bolas)' : ' · visitante') : '') : nick(p.a) + ' – ' + nick(p.b);
+  var titulo = op.mio ? ['Contra ', enlace(p.a === yo ? p.b : p.a), (p.tipo === 'Grupo' ? (p.a === yo ? ' · local (pones bolas)' : ' · visitante') : '')] : [enlace(p.a), ' – ', enlace(p.b)];
   var res = p.texto ? h('div', { class: 'res' }, (p.texto === 'W.O.' ? 'No jugado' : p.texto) + ' · gana ', h('b', { text: nick(p.ganador === 'A' ? p.a : p.b) }))
                     : h('div', { class: 'res' }, h('span', { class: 'pend', text: 'Pendiente' }));
   var botones = [];
@@ -752,7 +928,7 @@ function filaPartido(p, op) {
     botones.push(h('button', { class: 'boton peq ' + (p.texto ? 'sec' : 'prim'), text: p.texto ? 'Corregir' : 'Meter resultado', onclick: function () { abrirResultado(p, !!op.admin); } }));
     if (p.texto) botones.push(h('button', { class: 'boton peq texto rojo', text: 'Borrar', onclick: function () { confirmarBorrar(p, !!op.admin); } }));
   }
-  return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs', text: titulo }), res), botones);
+  return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs' }, titulo), res), botones);
 }
 
 /* ===================== RESULTADOS ===================== */
@@ -808,7 +984,7 @@ function validar() {
 function opcionesJuegos() { var o = [h('option', { value: '', text: '–' })]; for (var i = 0; i <= 7; i++) o.push(h('option', { value: String(i), text: String(i) })); return o; }
 
 function pintarResultado() {
-  var hoja = document.getElementById('hoja'), p = M.p;
+  var hoja = limpiarHoja(), p = M.p;
   hoja.innerHTML = '';
   poner(hoja, [h('h3', { text: nick(p.a) + ' vs ' + nick(p.b) }),
     h('p', { class: 'nota', text: (p.tipo === 'Reto' ? 'Reto' : p.tipo === 'Torneo' ? 'Partido de torneo' : nombreGrupo(p.grupo)) + (M.admin ? ' · como profesor' : '') })]);
@@ -932,14 +1108,14 @@ function detalleTorneo(t, admin) {
     poner(dentro, h('p', { class: 'nota', style: 'margin-top:0', text: (t.cierreInscripcion ? 'Inscripción hasta el ' + fecha(t.cierreInscripcion) + '. ' : '') +
       (t.tipo === 'Máster' ? 'Entran los 8 inscritos con mejor clasificación: 1º contra 8º, 4º contra 5º…' : 'Los mejores de la clasificación serán cabezas de serie; el resto se coloca por sorteo.') }));
     poner(dentro, h('div', { class: 'sub', text: t.inscritos.length + ' inscritos' }));
-    poner(dentro, h('p', { style: 'margin:0 0 10px' }, t.inscritos.map(nick).join(', ') || 'Nadie todavía.'));
+    poner(dentro, h('p', { style: 'margin:0 0 10px' }, t.inscritos.length ? t.inscritos.map(function (id, i) { return [i ? ', ' : '', enlace(id)]; }) : 'Nadie todavía.'));
     if (yo) poner(dentro, h('button', { class: 'boton ' + (apuntado ? 'sec' : 'bola'), text: apuntado ? 'Desapuntarme' : 'Apuntarme', onclick: function (e) {
       e.target.disabled = true;
       llamar(apuntado ? 'desapuntarse' : 'inscribirse', [S.token, t.id], function (dd) { trasCambio(dd, apuntado ? 'Te has desapuntado' : '¡Apuntado! Suerte'); }, function (m) { e.target.disabled = false; toast(m); });
     } }));
   } else {
     if (t.estado === 'Finalizado') poner(dentro, h('div', { class: 'campeon', style: 'margin:-12px -16px 12px' }, h('span', { class: 'copa', text: '🏆' }),
-      h('div', null, h('b', { text: nick(t.campeon) }), h('small', { text: 'Campeón · subcampeón: ' + nick(t.subcampeon) + ' · ' + fecha(t.fin) }))));
+      h('div', null, h('b', null, enlace(t.campeon)), h('small', null, 'Campeón · subcampeón: ', enlace(t.subcampeon), ' · ' + fecha(t.fin)))));
     poner(dentro, h('p', { class: 'nota', style: 'margin:0 0 6px', text: 'El número junto a cada nombre es su puesto en la clasificación cuando se sorteó el cuadro.' }));
     poner(dentro, cuadroTorneo(t, admin));
   }
@@ -958,7 +1134,7 @@ function cuadroTorneo(t, admin) {
       var bye = r === 1 && (!p.a || !p.b);
       function lado(id, letra) {
         return h('div', { class: 'lado' + (p.texto && p.ganador === letra ? ' gana' : '') + (!id && bye ? ' bye' : '') },
-          h('span', null, id && rk[id] ? h('span', { class: 'rk', text: String(rk[id]) }) : h('span', { class: 'rk' }), id ? (id === yo ? h('b', { class: 'soy', text: nick(id) }) : nick(id)) : (bye ? 'exento' : '—')),
+          h('span', null, id && rk[id] ? h('span', { class: 'rk', text: String(rk[id]) }) : h('span', { class: 'rk' }), id ? (id === yo ? h('b', { class: 'soy' }, enlace(id)) : enlace(id)) : (bye ? 'exento' : '—')),
           p.texto && p.ganador === letra ? h('span', { text: '✓' }) : null);
       }
       var mio = yo && (p.a === yo || p.b === yo) && p.a && p.b;
@@ -984,19 +1160,19 @@ function vistaRetos(v) {
     var enviados = d.retos.filter(function (r) { return r.a === yo.id && r.estado === 'propuesto'; });
     var grupoCaja = [];
     if (recibidos.length) grupoCaja.push(h('div', { class: 'caja mia' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Te han retado' })), h('div', { class: 'caja-cuerpo' }, recibidos.map(function (r) {
-      return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs', text: nick(r.a) + ' te reta' }), h('div', { class: 'res', text: 'Desde el ' + fecha(r.creado) })),
+      return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs' }, enlace(r.a), ' te reta'), h('div', { class: 'res', text: 'Desde el ' + fecha(r.creado) })),
         h('button', { class: 'boton peq prim', text: 'Aceptar', onclick: function (e) { e.target.disabled = true; llamar('responderReto', [S.token, r.id, true], function (dd) { trasCambio(dd, 'Reto aceptado: quedad para jugar'); }); } }),
         h('button', { class: 'boton peq texto rojo', text: 'Rechazar', onclick: function (e) { e.target.disabled = true; llamar('responderReto', [S.token, r.id, false], function (dd) { trasCambio(dd, 'Reto rechazado'); }); } }));
     }))));
     if (porJugar.length) grupoCaja.push(h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Pendientes de jugar' })), h('div', { class: 'caja-cuerpo' }, porJugar.map(function (r) {
       var rival = r.a === yo.id ? r.b : r.a, j = jugador(rival);
-      return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs', text: 'Contra ' + nick(rival) }),
+      return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs' }, 'Contra ', enlace(rival)),
         h('div', { class: 'res' }, j && j.telefono ? h('a', { href: 'tel:' + j.telefono.replace(/\s/g, ''), text: j.telefono }) : 'Sin teléfono')),
         h('button', { class: 'boton peq prim', text: 'Meter resultado', onclick: function () { abrirResultado(r, false); } }),
         h('button', { class: 'boton peq texto rojo', text: 'Cancelar', onclick: function () { cancelarReto(r); } }));
     }))));
     if (enviados.length) grupoCaja.push(h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Esperando respuesta' })), h('div', { class: 'caja-cuerpo' }, enviados.map(function (r) {
-      return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs', text: 'Has retado a ' + nick(r.b) }), h('div', { class: 'res', text: 'El ' + fecha(r.creado) })),
+      return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs' }, 'Has retado a ', enlace(r.b)), h('div', { class: 'res', text: 'El ' + fecha(r.creado) })),
         h('button', { class: 'boton peq texto rojo', text: 'Cancelar', onclick: function () { cancelarReto(r); } }));
     }))));
     if (grupoCaja.length) poner(v, h('div', { class: 'rejilla', style: 'margin-bottom:14px' }, grupoCaja));
@@ -1005,7 +1181,7 @@ function vistaRetos(v) {
   poner(v, h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Últimos retos' })), h('div', { class: 'caja-cuerpo' },
     jugados.length ? jugados.map(function (r) {
       var g = r.ganador === 'A' ? r.a : r.b, q = r.ganador === 'A' ? r.b : r.a;
-      return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs', text: nick(g) + ' gana a ' + nick(q) }),
+      return h('div', { class: 'partido' }, h('div', { class: 'info' }, h('div', { class: 'vs' }, enlace(g), ' gana a ', enlace(q)),
         h('div', { class: 'res', text: (r.texto === 'W.O.' ? 'No jugado' : r.texto) + ' · ' + fecha(r.fecha) + ' · +' + d.reglas.puntosReto + ' puntos' })),
         yo && (r.a === yo.id || r.b === yo.id) ? h('button', { class: 'boton peq texto', text: 'Corregir', onclick: function () { abrirResultado(r, false); } }) : null);
     }) : h('div', { class: 'vacio', text: 'Todavía no se ha jugado ningún reto. ¡Estrénalo!' }))));
@@ -1018,7 +1194,7 @@ function cancelarReto(r) {
 }
 
 function elegirRival() {
-  var hoja = document.getElementById('hoja'), sel = null;
+  var hoja = limpiarHoja(), sel = null;
   hoja.innerHTML = '';
   var input = h('input', { class: 'buscar', style: 'max-width:none;margin-bottom:10px', type: 'search', placeholder: 'Buscar jugador…', oninput: lista });
   var cont = h('div', { class: 'lista-elegir' });
@@ -1056,8 +1232,7 @@ function vistaHistorico(v) {
   var bloques = [];
   if (torneos.length) bloques.push(h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Grand Slam y Finals' })), h('div', { class: 'caja-cuerpo' }, torneos.map(function (x) {
     return h('div', { class: 'titulo' }, h('span', { class: 'copa', text: '🏆' }), h('div', { class: 'info' }, h('b', { text: x.titulo }),
-      h('small', null, 'Campeón: ', h('a', { href: '#', text: nick(x.campeon), onclick: function (e) { e.preventDefault(); abrirFicha(x.campeon); } }),
-        ' · subcampeón: ' + nick(x.subcampeon) + ' · ' + fecha(x.fecha))));
+      h('small', null, 'Campeón: ', enlace(x.campeon), ' · subcampeón: ', enlace(x.subcampeon), ' · ' + fecha(x.fecha))));
   }))));
   bloques.push(h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h2', { text: 'Palmarés' })), h('div', { class: 'caja-cuerpo' }, h('table', null,
     h('thead', null, h('tr', null, h('th', { text: '' }), h('th', { text: 'Jugador' }), h('th', { text: 'Torneos' }), h('th', { text: 'Grupos' }))),
@@ -1069,14 +1244,14 @@ function vistaHistorico(v) {
     var lista = porJornada[k].sort(function (a, b) { return String(a.titulo.split(' · ')[1]).localeCompare(String(b.titulo.split(' · ')[1]), 'es', { numeric: true }); });
     poner(v, h('div', { class: 'caja' }, h('div', { class: 'caja-cab' }, h('h2', { text: k }), h('span', { class: 'nota der', text: 'Cerrada el ' + fecha(lista[0].fecha) })),
       h('div', { class: 'caja-cuerpo' }, lista.map(function (x) {
-        return h('div', { class: 'titulo' }, catChip(x.cat), h('div', { class: 'info' }, x.titulo.split(' · ')[1] + ': ', h('b', { text: nick(x.campeon) }), h('small', { text: 'Subcampeón: ' + nick(x.subcampeon) })));
+        return h('div', { class: 'titulo' }, catChip(x.cat), h('div', { class: 'info' }, x.titulo.split(' · ')[1] + ': ', h('b', null, enlace(x.campeon)), h('small', { text: 'Subcampeón: ' + nick(x.subcampeon) })));
       }))));
   });
 }
 
 /* ===================== CUENTA ===================== */
 function abrirPerfil() {
-  var yo = S.d.yo, hoja = document.getElementById('hoja');
+  var yo = S.d.yo, hoja = limpiarHoja();
   hoja.innerHTML = '';
   if (!yo) {
     poner(hoja, [h('h3', { text: 'Cuenta de profesores' }), h('p', { class: 'nota', text: 'La contraseña de esta cuenta se cambia en el Panel (Google Sheets): 🎾 Ranking › Contraseña de profesores.' }),
@@ -1091,7 +1266,7 @@ function abrirPerfil() {
     llamar('miPerfil', [S.token, { nick: nickI.value, telefono: tel.value, correo: mail.value }], function (d) { trasCambio(d, 'Datos guardados'); }, fallo);
   } });
   var a1 = h('input', { type: 'password', autocomplete: 'current-password', placeholder: 'Contraseña actual' }), a2 = h('input', { type: 'password', autocomplete: 'new-password', placeholder: 'Contraseña nueva (mínimo 6)' });
-  poner(hoja, [h('h3', { text: 'Mi cuenta' }), h('p', { class: 'nota', text: yo.nombre }), err,
+  poner(hoja, [h('h3', { text: 'Mi cuenta' }), h('p', { class: 'nota' }, yo.nombre + ' · ', h('a', { href: '#', text: 'ver mi perfil', onclick: function (e) { e.preventDefault(); abrirFicha(yo.id); } })), err,
     h('div', { class: 'campo' }, h('label', { text: 'Nick' }), nickI),
     h('div', { class: 'campo' }, h('label', { text: 'Teléfono (lo ven los demás socios)' }), tel),
     h('div', { class: 'campo' }, h('label', { text: 'Correo (no se muestra)' }), mail),
@@ -1108,14 +1283,14 @@ function abrirPerfil() {
 /* ===================== PROFESORES ===================== */
 function vistaAdmin(v) {
   var A = S.adm;
-  poner(v, h('div', { class: 'chips' }, [['jornada', 'Jornada'], ['torneos', 'Torneos'], ['jugadores', 'Jugadores'], ['resultados', 'Resultados']].map(function (x) {
+  poner(v, h('div', { class: 'chips' }, [['jornada', 'Jornada'], ['torneos', 'Torneos'], ['jugadores', 'Jugadores'], ['niveles', 'Niveles'], ['resultados', 'Resultados']].map(function (x) {
     return h('button', { class: 'chip' + (A.sub === x[0] ? ' activo' : ''), text: x[1], onclick: function () { A.sub = x[0]; pintar(); } });
   })));
   if (!A.jugadores) {
     poner(v, h('div', { class: 'cargando' }));
     return llamar('adminJugadores', [S.token], function (js) { A.jugadores = js; pintar(); });
   }
-  ({ jornada: profJornada, torneos: profTorneos, jugadores: profJugadores, resultados: profResultados }[A.sub])(v);
+  ({ jornada: profJornada, torneos: profTorneos, jugadores: profJugadores, niveles: profNiveles, resultados: profResultados }[A.sub])(v);
 }
 function refrescarAdmin(msg) { S.adm.jugadores = null; S.adm.propuesta = null; if (msg) toast(msg); cerrarModal(); cargar(); }
 
@@ -1297,7 +1472,7 @@ function cajaAdminTorneo(t) {
 }
 
 function abrirEditarTorneo(t) {
-  var hoja = document.getElementById('hoja');
+  var hoja = limpiarHoja();
   hoja.innerHTML = '';
   var nombre = h('input', { type: 'text', value: t.nombre }), prev = h('input', { type: 'text', value: t.prevista || '', placeholder: 'Ej.: Enero – febrero' });
   var cierre = h('input', { type: 'date', value: t.cierreInscripcion || '' });
@@ -1311,6 +1486,32 @@ function abrirEditarTorneo(t) {
     h('div', { class: 'campo' }, h('label', { text: 'Fin de la inscripción' }), cierre),
     h('div', { class: 'acciones' }, h('button', { class: 'boton sec', text: 'Cancelar', onclick: cerrarModal }), b)]);
   abrirModal();
+}
+
+/* ---- niveles ---- */
+function profNiveles(v) {
+  var A = S.adm, d = S.d, inputs = {};
+  var js = A.jugadores.filter(function (j) { return j.estado !== 'Baja'; }).sort(function (a, b) {
+    return (a.grupo || 99) - (b.grupo || 99) || a.nombre.localeCompare(b.nombre, 'es');
+  });
+  poner(v, h('div', { class: 'intro' }, h('h1', { text: 'Niveles iniciales' }),
+    h('p', { text: 'Pon el nivel (0 a 10) con el que empieza cada uno. Después la web lo va ajustando sola con los resultados. Si lo dejas vacío, se usa el de su categoría: 1000 → 7,5 · 500 → 6 · 250 → 4,5 · 100 → 3.' })));
+  var cuerpo = h('div', { class: 'caja-cuerpo' });
+  js.forEach(function (j) {
+    var nv = nivelDe(j.id);
+    inputs[j.id] = h('input', { type: 'number', min: '0', max: '10', step: '0.5', inputmode: 'decimal', class: 'mover', style: 'width:84px;text-align:center',
+      value: j.nivelInicial || '', placeholder: String(j.nivelBase).replace('.', ',') });
+    poner(cuerpo, h('div', { class: 'jug' },
+      h('div', { class: 'nom' }, j.nombre + (j.nick ? ' · ' + j.nick : ''), h('small', { text: (j.grupo ? nombreGrupo(j.grupo) : 'Sin grupo') + (nv ? ' · nivel actual ' + txtNivel(nv.nivel) : '') })),
+      h('label', { class: 'nota', style: 'display:flex;gap:6px;align-items:center' }, 'Empieza en', inputs[j.id])));
+  });
+  poner(v, h('div', { class: 'caja', style: 'max-width:760px' }, cuerpo));
+  poner(v, h('div', { class: 'barra-fija' }, h('div', { class: 'in' }, h('div', { class: 'txt', text: 'Los cambios recalculan el nivel de todos.' }),
+    h('button', { class: 'boton prim', text: 'Guardar niveles', onclick: function (e) {
+      var mapa = {}; Object.keys(inputs).forEach(function (id) { mapa[id] = inputs[id].value; });
+      e.target.disabled = true;
+      llamar('adminNiveles', [S.token, mapa], function (m) { refrescarAdmin(m); }, function (m) { e.target.disabled = false; toast(m); });
+    } }))));
 }
 
 /* ---- jugadores ---- */
@@ -1342,7 +1543,7 @@ function profJugadores(v) {
 }
 
 function abrirAlta() {
-  var hoja = document.getElementById('hoja'), pagado = false;
+  var hoja = limpiarHoja(), pagado = false;
   hoja.innerHTML = '';
   var nombre = h('input', { type: 'text', placeholder: 'Nombre y apellidos' }), tel = h('input', { type: 'tel' }), mail = h('input', { type: 'email' });
   var cats = S.d.reglas.piramide.map(function (n) { return n.cat; });
@@ -1362,7 +1563,7 @@ function abrirAlta() {
 }
 
 function abrirEditar(j) {
-  var A = S.adm, hoja = document.getElementById('hoja');
+  var A = S.adm, hoja = limpiarHoja();
   hoja.innerHTML = '';
   var usu = h('input', { type: 'text', value: j.usuario || '', style: 'text-transform:uppercase' });
   var nombre = h('input', { type: 'text', value: j.nombre }), nk = h('input', { type: 'text', value: j.nick || '' }), tel = h('input', { type: 'tel', value: j.telefono || '' }), mail = h('input', { type: 'email', value: j.correo || '' });
@@ -1413,7 +1614,7 @@ function profResultados(v) {
 }
 
 function abrirRetoProfesor() {
-  var hoja = document.getElementById('hoja'), A = S.adm;
+  var hoja = limpiarHoja(), A = S.adm;
   hoja.innerHTML = '';
   var activos = A.jugadores.filter(function (j) { return j.estado !== 'Baja'; });
   function sel() { return h('select', { class: 'mover', style: 'width:100%;padding:9px' }, h('option', { value: '', text: 'Elige…' }), activos.map(function (j) { return h('option', { value: j.id, text: j.nombre }); })); }
@@ -1437,11 +1638,12 @@ llamar = function (accion, args, ok, fallo) {
 
 /* ===================== ventanas ===================== */
 function abrirModal() { document.getElementById('modal').classList.remove('oculto'); }
-function cerrarModal() { document.getElementById('modal').classList.add('oculto'); M = null; }
+function limpiarHoja() { var x = document.getElementById('hoja'); x.classList.remove('ancha'); return x; }
+function cerrarModal() { document.getElementById('modal').classList.add('oculto'); limpiarHoja().classList.remove('ancha'); M = null; }
 document.getElementById('modal').addEventListener('click', function (e) { if (e.target.id === 'modal') cerrarModal(); });
 document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cerrarModal(); });
 function confirmar(titulo, texto, boton, peligro, accion) {
-  var hoja = document.getElementById('hoja');
+  var hoja = limpiarHoja();
   hoja.innerHTML = '';
   var b = h('button', { class: 'boton ' + (peligro ? 'peligro' : 'prim'), text: boton, onclick: function () {
     b.disabled = true; b.textContent = 'Un momento…';
