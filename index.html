@@ -791,7 +791,7 @@ function abrirFicha(id) {
   var d = S.d, j = jugador(id);
   if (!j) return;
   var r = d.ranking.filter(function (x) { return x.id === id; })[0] || {}, nv = nivelDe(id);
-  var e = estadisticas(id), pend = pendientesDe(id);
+  var e = estadisticas(id);
   var titulos = d.historico.filter(function (x) { return x.campeon === id || x.subcampeon === id; });
   var vigentes = d.puntos.filter(function (p) { return p.jugador === id && p.fecha <= d.hoy && p.caduca > d.hoy; }).sort(function (a, b) { return a.caduca < b.caduca ? -1 : 1; });
   var ordenNivel = d.niveles.slice().sort(function (a, b) { return b.nivel - a.nivel || b.ganados - a.ganados; }).map(function (x) { return x.id; });
@@ -833,8 +833,6 @@ function abrirFicha(id) {
       h('div', null, h('small', { text: 'Jornada' }), h('b', { text: e.tipo.Grupo[0] + '-' + e.tipo.Grupo[1] })),
       h('div', null, h('small', { text: 'Torneos' }), h('b', { text: e.tipo.Torneo[0] + '-' + e.tipo.Torneo[1] })),
       h('div', null, h('small', { text: 'Retos' }), h('b', { text: e.tipo.Reto[0] + '-' + e.tipo.Reto[1] }))) : null,
-    h('div', { class: 'sub', text: 'Partidos pendientes (' + pend.length + ')' }),
-    pend.length ? pend.map(function (x) { return fila(x.p, { donde: x.donde + (x.plazo ? ' · hasta el ' + fecha(x.plazo) : '') }); }) : h('p', { class: 'nota', style: 'margin:0', text: 'Ninguno.' }),
     titulos.length ? h('div', { class: 'sub', text: 'Palmarés' }) : null,
     titulos.map(function (t) { return h('div', { class: 'titulo' }, h('span', { class: 'copa', text: t.campeon === id ? '🏆' : '🥈' }),
       h('div', { class: 'info' }, t.titulo, h('small', { text: (t.campeon === id ? 'Campeón' : 'Subcampeón') + ' · ' + fecha(t.fecha) }))); }),
