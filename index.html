@@ -349,6 +349,15 @@
   .datos-ficha div { background: var(--fondo); border-radius: 10px; padding: 8px 10px; }
   .datos-ficha b { font-family: var(--num); font-size: 22px; display: block; line-height: 1.1; }
   .datos-ficha small { color: var(--suave); font-size: 12.5px; }
+  /* ---------- noticias ---------- */
+  .noticia h2 { font-size: 19px; margin: 8px 0 4px; }
+  .noticia-meta { display: flex; gap: 8px; align-items: center; }
+  .noticia-texto { margin: 0; white-space: pre-line; }
+  .noticia.nueva { border-color: var(--pista); box-shadow: inset 4px 0 0 var(--bola); }
+  .marcar { display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 10px; cursor: pointer; }
+  .marcar input { width: 18px; height: 18px; accent-color: var(--pista); }
+  .campo textarea { resize: vertical; }
+
   /* ---------- perfil ---------- */
   .hoja.ancha { max-width: 680px; padding-top: 0; }
   .perfil-cab { --n1: var(--pista); position: relative; display: flex; align-items: center; gap: 16px; margin: 0 -18px 0; padding: 22px 18px 18px; background: var(--pista); color: #fff; border-bottom: 5px solid var(--n1); }
@@ -522,7 +531,7 @@ function cargar(despues) {
 function trasCambio(d, msg) { S.d = d; if (msg) toast(msg); cerrarModal(); pintar(); }
 
 /* ===================== navegación ===================== */
-var SECCIONES = { jornada: 'Jornada', torneos: 'Torneos', ranking: 'Clasificación', historico: 'Histórico', retos: 'Retos', admin: 'Admin' };
+var SECCIONES = { jornada: 'Jornada', torneos: 'Torneos', ranking: 'Clasificación', historico: 'Histórico', retos: 'Retos', noticias: 'Noticias', admin: 'Admin' };
 function ir(vista) {
   S.vista = vista;
   try { history.pushState({ v: vista }, ''); } catch (e) {}
@@ -553,7 +562,7 @@ function pintar() {
   document.getElementById('cuenta').textContent = d.profesor ? 'Profesores' : d.yo.nick;
   if (S.error) poner(v, h('div', { class: 'error-caja', text: S.error }));
   if (enMenu) return vistaMenu(v);
-  ({ ranking: vistaRanking, jornada: vistaJornada, torneos: vistaTorneos, retos: vistaRetos, historico: vistaHistorico, admin: vistaAdmin }[S.vista])(v);
+  ({ ranking: vistaRanking, jornada: vistaJornada, torneos: vistaTorneos, retos: vistaRetos, historico: vistaHistorico, noticias: vistaNoticias, admin: vistaAdmin }[S.vista])(v);
 }
 
 /* ===================== ACCESO ===================== */
@@ -603,7 +612,7 @@ function pantallaPrimeraVez(v) {
     h('div', { class: 'campo' }, h('label', { text: 'Contraseña nueva' }), c1, c2),
     h('div', { class: 'campo' }, h('label', { text: 'Nick' }), nk, h('p', { class: 'nota', text: 'Es el nombre que verán los demás en la clasificación.' })),
     h('div', { class: 'campo' }, h('label', { text: 'Teléfono' }), tel, h('p', { class: 'nota', text: 'Lo ven los demás socios, para quedar a jugar.' })),
-    h('div', { class: 'campo' }, h('label', { text: 'Correo (no se muestra)' }), mail),
+    h('div', { class: 'campo' }, h('label', { text: 'Correo (para recibir los avisos; no se muestra)' }), mail),
     b,
     h('p', { class: 'nota' }, 'Tu usuario seguirá siendo ' + yo.usuario + '. ', h('a', { href: '#', text: 'Salir', onclick: function (e) { e.preventDefault(); salirCuenta(); } })));
   poner(v, h('div', { class: 'pantalla-acceso' }, h('img', { class: 'logo-acceso', src: 'img/logo-blanco.png', alt: 'LKZ' }), form));
@@ -657,7 +666,9 @@ function vistaMenu(v) {
     tile('historico', 'Histórico', titulos ? titulos + ' títulos repartidos' : 'Campeones de grupos y torneos'),
     tile('retos', 'Retos', retosPend ? 'Te han retado: responde' : 'Reta a quien quieras: +' + d.reglas.puntosReto + ' puntos', { aviso: retosPend || null })
   ];
-  if (d.profesor) tiles.push(tile('admin', 'Admin', 'Jornadas, torneos, jugadores y resultados'));
+  var visto = +(leerLS('noticiaVista') || 0), nuevas = (d.noticias || []).filter(function (n) { return n.num > visto; }).length;
+  tiles.push(tile('noticias', 'Noticias', d.noticias && d.noticias.length ? d.noticias[0].titulo : 'Aquí saldrán los avisos de los profesores', { aviso: nuevas || null }));
+  if (d.profesor) tiles.push(tile('admin', 'Admin', 'Jornadas, torneos, jugadores, niveles, noticias y resultados'));
   poner(v, h('nav', { class: 'menu', 'aria-label': 'Secciones' }, tiles));
 }
 
@@ -1247,6 +1258,55 @@ function vistaHistorico(v) {
   });
 }
 
+/* ===================== NOTICIAS ===================== */
+var TIPO_NOTICIA = { Jornada: ['Jornada', ''], Torneo: ['Torneos', 'azul'], Aviso: ['Aviso', 'ambar'] };
+function vistaNoticias(v) {
+  var d = S.d, ns = d.noticias || [], visto = +(leerLS('noticiaVista') || 0);
+  poner(v, h('div', { class: 'intro' }, h('h1', { text: 'Noticias' }), h('p', { text: 'Avisos de los profesores: nuevas jornadas, inscripciones de torneos y todo lo que haya que saber.' })));
+  if (!ns.length) return poner(v, h('div', { class: 'caja' }, h('div', { class: 'vacio', text: 'Todavía no hay noticias.' })));
+  poner(v, h('div', { class: 'pila', style: 'max-width:760px' }, ns.map(function (n) {
+    var t = TIPO_NOTICIA[n.tipo] || TIPO_NOTICIA.Aviso;
+    return h('article', { class: 'caja noticia' + (n.num > visto ? ' nueva' : '') }, h('div', { class: 'caja-cuerpo' },
+      h('div', { class: 'noticia-meta' }, h('span', { class: 'etiqueta ' + t[1], text: t[0] }), h('span', { class: 'nota', text: fecha(n.fecha) }), n.num > visto ? h('span', { class: 'etiqueta rojo', text: 'Nueva' }) : null),
+      h('h2', { text: n.titulo }), n.texto ? h('p', { class: 'noticia-texto', text: n.texto }) : null));
+  })));
+  if (ns[0]) guardarLS('noticiaVista', String(ns[0].num));
+}
+
+/**
+ * Diálogo de los profesores para publicar algo con aviso opcional.
+ * conf = {titulo, explicacion, boton, tituloNoticia, textoNoticia}; accion(aviso, fin)
+ */
+function pedirAviso(conf, accion) {
+  var hoja = limpiarHoja(), nCorreos = S.d.correosSocios || 0;
+  hoja.innerHTML = '';
+  var tit = h('input', { type: 'text', value: conf.tituloNoticia, maxlength: '120' });
+  var txt = h('textarea', { rows: '4', value: conf.textoNoticia });
+  var chkN = h('input', { type: 'checkbox', checked: conf.noticia !== false });
+  var chkM = h('input', { type: 'checkbox' });
+  var campos = h('div', null, h('div', { class: 'campo' }, h('label', { text: 'Título' }), tit), h('div', { class: 'campo' }, h('label', { text: 'Texto' }), txt));
+  function refrescar() { campos.style.display = chkN.checked || chkM.checked ? '' : 'none'; }
+  chkN.onchange = refrescar; chkM.onchange = refrescar;
+  var b = h('button', { class: 'boton prim', text: conf.boton, onclick: function () {
+    b.disabled = true; b.textContent = 'Un momento…';
+    accion({ noticia: chkN.checked, correo: chkM.checked, titulo: tit.value, texto: txt.value, enlace: location.origin + location.pathname },
+      function (m) { b.disabled = false; b.textContent = conf.boton; toast(m); });
+  } });
+  poner(hoja, [h('h3', { text: conf.titulo }), conf.explicacion ? h('p', { class: 'nota', text: conf.explicacion }) : null,
+    h('label', { class: 'marcar' }, chkN, 'Publicar en Noticias'),
+    h('label', { class: 'marcar' }, chkM, 'Notificar también por correo', h('span', { class: 'nota', text: ' (' + nCorreos + ' socios tienen correo)' })),
+    campos,
+    h('div', { class: 'acciones' }, h('button', { class: 'boton sec', text: 'Volver', onclick: cerrarModal }), b)]);
+  refrescar(); abrirModal();
+}
+function resumenAviso(a) {
+  if (!a) return '';
+  var p = [];
+  if (a.noticia) p.push('noticia publicada');
+  if (a.correos) p.push('correo enviado a ' + a.correos + ' socios');
+  return (p.length ? ' · ' + p.join(' · ') : '') + (a.error ? ' · ' + a.error : '');
+}
+
 /* ===================== CUENTA ===================== */
 function abrirPerfil() {
   var yo = S.d.yo, hoja = limpiarHoja();
@@ -1267,7 +1327,7 @@ function abrirPerfil() {
   poner(hoja, [h('h3', { text: 'Mi cuenta' }), h('p', { class: 'nota' }, yo.nombre + ' · ', h('a', { href: '#', text: 'ver mi perfil', onclick: function (e) { e.preventDefault(); abrirFicha(yo.id); } })), err,
     h('div', { class: 'campo' }, h('label', { text: 'Nick' }), nickI),
     h('div', { class: 'campo' }, h('label', { text: 'Teléfono (lo ven los demás socios)' }), tel),
-    h('div', { class: 'campo' }, h('label', { text: 'Correo (no se muestra)' }), mail),
+    h('div', { class: 'campo' }, h('label', { text: 'Correo (para recibir los avisos; no se muestra)' }), mail),
     h('div', { class: 'acciones', style: 'margin-bottom:18px' }, b),
     h('div', { class: 'sub', text: 'Cambiar contraseña' }), h('div', { class: 'campo' }, a1, a2),
     h('div', { class: 'acciones', style: 'margin-bottom:18px' }, h('button', { class: 'boton sec', text: 'Cambiar contraseña', onclick: function (e) {
@@ -1281,14 +1341,14 @@ function abrirPerfil() {
 /* ===================== PROFESORES ===================== */
 function vistaAdmin(v) {
   var A = S.adm;
-  poner(v, h('div', { class: 'chips' }, [['jornada', 'Jornada'], ['torneos', 'Torneos'], ['jugadores', 'Jugadores'], ['niveles', 'Niveles'], ['resultados', 'Resultados']].map(function (x) {
+  poner(v, h('div', { class: 'chips' }, [['jornada', 'Jornada'], ['torneos', 'Torneos'], ['jugadores', 'Jugadores'], ['niveles', 'Niveles'], ['noticias', 'Noticias'], ['resultados', 'Resultados']].map(function (x) {
     return h('button', { class: 'chip' + (A.sub === x[0] ? ' activo' : ''), text: x[1], onclick: function () { A.sub = x[0]; pintar(); } });
   })));
   if (!A.jugadores) {
     poner(v, h('div', { class: 'cargando' }));
     return llamar('adminJugadores', [S.token], function (js) { A.jugadores = js; pintar(); });
   }
-  ({ jornada: profJornada, torneos: profTorneos, jugadores: profJugadores, niveles: profNiveles, resultados: profResultados }[A.sub])(v);
+  ({ jornada: profJornada, torneos: profTorneos, jugadores: profJugadores, niveles: profNiveles, noticias: profNoticias, resultados: profResultados }[A.sub])(v);
 }
 function refrescarAdmin(msg) { S.adm.jugadores = null; S.adm.propuesta = null; if (msg) toast(msg); cerrarModal(); cargar(); }
 
@@ -1373,10 +1433,15 @@ function profJornada(v) {
     h('button', { class: 'boton prim', text: 'Publicar jornada', onclick: function () {
       var vacios = A.estado.filter(function (g) { return !g.jugadores.length; });
       if (vacios.length) return toast('El grupo ' + etiquetas(A.estado)[vacios[0].numero].codigo + ' está vacío.');
-      confirmar('¿Publicar la nueva jornada?', (P.primera ? '' : 'Se reparten los puntos de la jornada ' + P.jornada.numero + ' y se apuntan los campeones. ') + 'Se crean ' + A.estado.length + ' grupos con sus partidos.' + (pendientes ? ' Ojo: quedan ' + pendientes + ' grupos sin revisar.' : ''), 'Publicar', false, function (finC) {
-        llamar('adminPublicarJornada', [S.token, A.estado.map(function (g) { return { numero: g.numero, cat: g.cat, jugadores: g.jugadores.map(function (j) { return j.id; }) }; }), A.fechas],
-          function (r) { refrescarAdmin('Jornada ' + r.numero + ' publicada: ' + r.grupos + ' grupos, ' + r.jugadores + ' jugadores'); }, finC);
-      });
+      var num = P.primera ? 1 : P.jornada.numero + 1;
+      pedirAviso({ titulo: '¿Publicar la jornada ' + num + '?', boton: 'Publicar jornada',
+        explicacion: (P.primera ? '' : 'Se reparten los puntos de la jornada ' + P.jornada.numero + ' y se apuntan los campeones. ') + 'Se crean ' + A.estado.length + ' grupos con sus partidos.' + (pendientes ? ' Ojo: quedan ' + pendientes + ' grupos sin revisar.' : ''),
+        tituloNoticia: 'Ya está la jornada ' + num,
+        textoNoticia: 'Ya están publicados los grupos de la jornada ' + num + '. Plazo para jugar: del ' + fecha(A.fechas.inicio) + ' al ' + fecha(A.fechas.fin) + '.\nEntra en Jornada para ver tu grupo y quedar con tus rivales.' },
+        function (aviso, finC) {
+          llamar('adminPublicarJornada', [S.token, A.estado.map(function (g) { return { numero: g.numero, cat: g.cat, jugadores: g.jugadores.map(function (j) { return j.id; }) }; }), A.fechas, aviso],
+            function (r) { refrescarAdmin('Jornada ' + r.numero + ' publicada' + resumenAviso(r.aviso)); }, finC);
+        });
     } }))));
 }
 
@@ -1421,7 +1486,12 @@ function cajaAdminTorneo(t) {
     {
       var cierre = h('input', { type: 'date', class: 'mover' });
       filas.push(h('div', { class: 'fila-botones' }, h('label', { class: 'nota', style: 'display:flex;gap:6px;align-items:center' }, 'Inscripción hasta', cierre),
-        boton('Abrir inscripción', 'prim', function (e) { e.target.disabled = true; llamar('adminAbrirInscripcion', [S.token, t.id, cierre.value, false], hecho('Inscripción abierta: ya sale en azul'), function (m) { e.target.disabled = false; toast(m); }); }),
+        boton('Abrir inscripción', 'prim', function () {
+          pedirAviso({ titulo: '¿Abrir la inscripción del ' + nombreT(t) + '?', boton: 'Abrir inscripción', explicacion: 'El torneo se pondrá en azul y los socios podrán apuntarse.',
+            tituloNoticia: 'Abierta la inscripción del ' + nombreT(t),
+            textoNoticia: 'Ya te puedes apuntar al ' + nombreT(t) + (cierre.value ? ' hasta el ' + fecha(cierre.value) : '') + '.\nEntra en Torneos y pulsa "Apuntarme".' },
+            function (aviso, fin) { llamar('adminAbrirInscripcion', [S.token, t.id, cierre.value, false, aviso], function (r) { refrescarAdmin('Inscripción abierta' + resumenAviso(r.aviso)); }, fin); });
+        }),
         editar, borrar));
     }
   } else if (t.estado === 'Inscripción') {
@@ -1484,6 +1554,25 @@ function abrirEditarTorneo(t) {
     h('div', { class: 'campo' }, h('label', { text: 'Fin de la inscripción' }), cierre),
     h('div', { class: 'acciones' }, h('button', { class: 'boton sec', text: 'Cancelar', onclick: cerrarModal }), b)]);
   abrirModal();
+}
+
+/* ---- noticias ---- */
+function profNoticias(v) {
+  var d = S.d;
+  poner(v, h('div', { class: 'fila-botones', style: 'margin-bottom:14px' }, h('button', { class: 'boton prim', text: 'Nueva noticia', onclick: function () {
+    pedirAviso({ titulo: 'Nueva noticia', boton: 'Publicar', tituloNoticia: '', textoNoticia: '' }, function (aviso, fin) {
+      if (!aviso.noticia) return fin('Marca "Publicar en Noticias".');
+      llamar('adminNoticia', [S.token, aviso], function (r) { refrescarAdmin('Publicada' + resumenAviso(r).replace(' · noticia publicada', '')); }, fin);
+    });
+  } }), h('span', { class: 'nota', text: d.correosSocios + ' socios tienen correo puesto. Google deja mandar unos 100 correos al día (cada socio cuenta uno).' })));
+  var ns = d.noticias || [];
+  if (!ns.length) return poner(v, h('div', { class: 'caja' }, h('div', { class: 'vacio', text: 'Todavía no hay noticias.' })));
+  poner(v, h('div', { class: 'caja', style: 'max-width:760px' }, h('div', { class: 'caja-cuerpo' }, ns.map(function (n) {
+    return h('div', { class: 'jug' }, h('div', { class: 'nom' }, n.titulo, h('small', { text: fecha(n.fecha) + ' · ' + n.tipo })),
+      h('button', { class: 'boton peq texto rojo', text: 'Borrar', onclick: function () {
+        confirmar('¿Borrar la noticia?', '"' + n.titulo + '" dejará de verse en Noticias.', 'Borrar', true, function (fin) { llamar('adminBorrarNoticia', [S.token, n.id], function () { refrescarAdmin('Noticia borrada'); }, fin); });
+      } }));
+  }))));
 }
 
 /* ---- niveles ---- */
